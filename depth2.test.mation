@@ -1,15 +1,4 @@
-//  "//" 
- //
-// Line comment starts with "//" and extends to end of line
-
-// Top level must be key-value pairs, which is denoted by `A: B`
-a: 1,      // keys do not need quotes unless
-"a ..": 2, // they contain space, 
-"key":  3, // of course they are allowed if that is your preference
-a: 2,      // validity of duplicate key depends on your target language, but API
-          // can be configured to catch and throw error on duplicate keys on same level //
-4: do-something,
-un-order: {  // values: empty
+'2levelsDepth': {  // values: empty
   z: [   // values: empty, newline
      // comment in list
   ], 
@@ -31,23 +20,4 @@ un-order: {  // values: empty
   // comment in between
   
   a:1, // trailing comma ok
-},
-"b": 2, //a: 2
-
-do: ( // Use "(" to enforce array structure
-  move 1 2 // No "," needed between non-keyvalue arguments
-  move 1 2, 3 -4 // For readability, commas can be inserted between arguments.
-    // Commas don't change the way it is parsed.
-    // This is good for calling functions whose signature is
-    // Eg. f(x0, y0, x1, y1), and you like the call to be more readable
-  move [1,2] [3,-4] // To pass list of lists
-  move [1 2] [3 -4] // Same
-  move (1,2) (3,-4) // Same, if you prefer "()"s for coordinates
-  move (1 2) (3 -4) // Same
-  turn { x:1, y:2 } // For key-values, No "," 
-
-
-  
-)
-//
- //
+}

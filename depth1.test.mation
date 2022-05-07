@@ -3,38 +3,58 @@
 // Line comment starts with "//" and extends to end of line
 
 // Top level must be key-value pairs, which is denoted by `A: B`
-a: 1,      // keys do not need quotes unless
-"a ..": 2, // they contain space, 
-"key":  3, // of course they are allowed if that is your preference
-a: 2,      // validity of duplicate key depends on your target language, but API
-          // can be configured to catch and throw error on duplicate keys on same level //
-4: do-something,
-un-order: {  // values: empty
-  z: [   // values: empty, newline
-     // comment in list
-  ], 
-  c: [ 1 2 3], // values: no newline 
-  d: [ a5: 5,  // keyvalues: No newline after '['
-    b: 4
-  ],
-  d: [ a5: 5,  // keyvalues: No newline after '['
-    b: 4
-  ],
-  a5: 5,  
-  d: [4  // values: no 1st newline, newline 
-    "e" c],
-  e:[  // has 1st newline keyvalues
-   f: [g:2],
-   h: 1
-  ],
-  // comment at end
-  // comment in between
-  
-  a:1, // trailing comma ok
-},
-"b": 2, //a: 2
+/** md **
+## Basics
 
-do: ( // Use "(" to enforce array structure
+### Markdown
+
+Mation enables styled documentation for configuration files. Lines between markdown denoted start and end tags will be syntax highlighted in supported editors.
+Markdown documentation sections can appear anywhere except in-between a key-value definition.
+
+Start tag is
+/** <case insensitive 'md'|'note'> **
+
+End tag is the standard C-style block-comment end tag '*' follow immediately by '/'.
+
+### Keys
+
+Keys can be unquoted as long as they do not contain spaces and start with legal literal characters of a..z|A..Z|0..9|'$'|'_'|'@'|
+Non-starting characters can contain other legal literal characters after the first character, which includes '-'|
+
+Duplicate keys are allowed. But API can be (later) configured to catch and throw error on duplicate keys within the same level.
+
+### Values 
+
+### Key Value Pairs 
+Commas are required after each but last pair, which can be inserted or omitted.
+*/
+
+a: 1,        // unquoted key
+a: 2,        // duplicate key
+"akey": 2,   // double quotes
+'key2': 2,   // single quotes
+'"k"' : 2,   // double within single quotes
+"'k'" : 2,   // single within double quotes
+"\"k" : 2,   // use escape character '\x' will appear vebatem as is
+try-to: do,  // dashed literal key
+or: do-this, // dashed literal value 
+
+/** md **
+## Data Structures
+
+### Arrays and Lists
+
+Arrays are denoted with '( ... )' and will support only values of the same type.
+Lists are denoted with '[ ... ]' and its values do not need to be of the same type.
+
+If you are you working with a target language such as JavaScript, it makes no difference which is used since it does not differenciate the tow.
+For other languages where there is a difference, if there is a target parser for it, it will generate the correct output. 
+The JSON output may add this type information, should the need arise.
+
+### Commands
+*/
+
+do: (         // Use "(" to enforce array structure
   move 1 2 // No "," needed between non-keyvalue arguments
   move 1 2, 3 -4 // For readability, commas can be inserted between arguments.
     // Commas don't change the way it is parsed.
@@ -44,10 +64,8 @@ do: ( // Use "(" to enforce array structure
   move [1 2] [3 -4] // Same
   move (1,2) (3,-4) // Same, if you prefer "()"s for coordinates
   move (1 2) (3 -4) // Same
-  turn { x:1, y:2 } // For key-values, No "," 
-
-
-  
+  turn { x:1, y:2 } // One key-values map
+  turn x:1 y:2      // Multi-signle key-values 
 )
 //
  //

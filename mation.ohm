@@ -1,4 +1,4 @@
-ecsGrammar {
+mationGrammar {
   Program = (markdown | KeyValuesNoBrace)+
   
   KeyValue = Key ":" Value
@@ -6,13 +6,13 @@ ecsGrammar {
   KeyValuesNoBrace = NonemptyListOf<KeyValue, ","> ","?
   KeyValuesBraced = "{" KeyValuesNoBrace "}"
   Key
-    = ident
+    = identifier
     | stringLiteral
     | numericLiteral
   Value
-    = KeyValue // keyvalue before ident else ':' won't match 
+    = KeyValue // keyvalue before identifier else ':' won't match 
     | KeyValuesBraced
-    | ident
+    | identifier
     | literal
     | List  // []
     | Array // ()
@@ -20,7 +20,7 @@ ecsGrammar {
     
   Values = (Value ","?)*
   Commands = (Command ","?)*
-  Identifiers = (ident ","?)* // Need syntactic rule (Caps), lexical rule fails parsing "(1, 2)" 
+  Identifiers = (identifier ","?)* // Need syntactic rule (Caps), lexical rule fails parsing "(1, 2)" 
   Literals = (literal ","?)*  // Same
   Lists = (List ","?)*
   Arrays = (Array ","?)*
@@ -35,7 +35,7 @@ ecsGrammar {
   
   // Lists and Command args do not enforce same type as Arrays
   List = "[" Values "]"
-  Command = ident Values
+  Command = identifier Values
 
   markdown = mdStart mdText mdEnd
   mdStart = "/*" "*"* ws* mdLabel ws* "*"*
@@ -49,7 +49,7 @@ ecsGrammar {
   nl = "\n" | "\r\n"
   space += ws | nl | comment
 
-  ident = ~reservedWord identName
+  identifier = ~reservedWord identName
   identName = identStart identPart*
   identStart = letter | unicode | "$" | "_" | otherIStart
   identPart = identStart | digit | otherIPart
@@ -58,6 +58,7 @@ ecsGrammar {
   
   unicode = unicodeStart unicodePart*
   unicodeStart = "\\" unicodeEscSeq
+  unicodeEscSeq = "u" hexDigit hexDigit hexDigit hexDigit
   unicodePart = unicodeStart | unicodeCM | unicodeDigit | unicodeCP | "\u200C" | "\u200D"
   
   literal = nullLiteral | booleanLiteral | numericLiteral | stringLiteral 
@@ -73,28 +74,28 @@ ecsGrammar {
     | "\uFEFF"  -- byteOrderMark
     | unicodeSpace
 
-  stringLiteral = "\"" notQuotedString "\""
-  notQuotedString = notQuotedChar*
-  notQuotedChar = ~("\"" | "\\" | nl) sourceChar -- nonEscaped
-                   | "\\" escapeSeq                 -- escaped
-  //                  | lineContinuation               -- lineContinuation
-  // lineContinuation = "\\" nl
+  stringLiteral = "\"" nonDoubleQuoteChar* "\""
+                | "'" nonSingleQuoteChar* "'"
 
-  escapeSeq = unicodeEscSeq
+  nonDoubleQuoteChar = ~("\"" | "\\" | nl) sourceChar -- nonEscaped
+                     | "\\" escapeSeqence             -- escaped
+  nonSingleQuoteChar = ~("'" | "\\" | nl ) sourceChar -- nonEscaped
+                     | "\\" escapeSeqence             -- escaped
+
+  escapeSeqence = unicodeEscSeq
             | hexEscSeq
             | octalEscSeq
             | charEscSeq  // Must come last.
-  charEscSeq = singleEscapeChar
-                          | nonEscapeChar
-  singleEscapeChar = "'" | "\"" | "\\" | "b" | "f" | "n" | "r" | "t" | "v"
-  nonEscapeChar = ~(escapeChar | nl) sourceChar
-  escapeChar = singleEscapeChar | decimalDigit | "x" | "u"
+  charEscSeq = singleEscapeChar | nonEscapeChar
   octalEscSeq = zeroToThree octalDigit octalDigit    -- whole
               | fourToSeven octalDigit               -- eightTimesfourToSeven
               | zeroToThree octalDigit ~decimalDigit -- eightTimesZeroToThree
               | octalDigit ~decimalDigit             -- octalDigits
   hexEscSeq = "x" hexDigit hexDigit
-  unicodeEscSeq = "u" hexDigit hexDigit hexDigit hexDigit
+  singleEscapeChar = "'" | "\"" | "\\" | "b" | "f" | "n" | "r" | "t" | "v"
+  nonEscapeChar = ~(escapeChar | nl) sourceChar
+  escapeChar = singleEscapeChar | decimalDigit | "x" | "u"
+
   unicodeDigit (a digit)
     = "\u0030".."\u0039" | "\u0660".."\u0669" | "\u06F0".."\u06F9" | "\u0966".."\u096F" | "\u09E6".."\u09EF" | "\u0A66".."\u0A6F" | "\u0AE6".."\u0AEF" | "\u0B66".."\u0B6F" | "\u0BE7".."\u0BEF" | "\u0C66".."\u0C6F" | "\u0CE6".."\u0CEF" | "\u0D66".."\u0D6F" | "\u0E50".."\u0E59" | "\u0ED0".."\u0ED9" | "\u0F20".."\u0F29" | "\uFF10".."\uFF19"
 

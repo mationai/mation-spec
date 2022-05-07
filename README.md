@@ -58,6 +58,7 @@ JSON is the default standard when one thinks about configuration and data exchan
 ## Roadmap
 
 ## High Priority
+[ ] Tree Parser
 [ ] Extensive Unit Tests
 [ ] Common Data Types
 [ ] Syntax highlighter for VSCode
@@ -66,7 +67,13 @@ JSON is the default standard when one thinks about configuration and data exchan
 
 ## Mid Priority
 [ ] Meta variables
+[ ] String templates
 [ ] Code block values
-[ ] Syntax highlighter for online editors 
+[ ] Syntax highlighter for browser editors 
 [ ] Syntax highlighter for major editors 
 [ ] Parser for other languages 
+
+## Anti-Roadmap
+
+To keep Mation simple, it will not support:
+- String line continuations - use string templates for multi-line strings 
