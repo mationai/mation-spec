@@ -1,0 +1,15 @@
+{
+  "name": "mation-spec",
+  "version": "0.1.0",
+  "description": "Readable Configuration Specification Format for Automation and Task Runners",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "John Leung",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "ohm-js": "^16.3.4"
+  }
+}

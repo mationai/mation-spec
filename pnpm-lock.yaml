@@ -1,0 +1,14 @@
+lockfileVersion: 5.4
+
+specifiers:
+  ohm-js: ^16.3.4
+
+dependencies:
+  ohm-js: 16.3.4
+
+packages:
+
+  /ohm-js/16.3.4:
+    resolution: {integrity: sha512-Twk5k+an4HLKH/3QMiItq87svx+2aG6HVYa3jTs5D54GuKIYs2UQUF5NH/+y/pvVmocwWulrBd4VdrNVPQ2zJQ==}
+    engines: {node: '>=0.12.1'}
+    dev: false
