@@ -44,28 +44,38 @@ or: do-this, // dashed literal value
 
 ### Arrays and Lists
 
-Arrays are denoted with '( ... )' and will support only values of the same type.
+Arrays are denoted with '( ... )' and will only contain values of the same type.
 Lists are denoted with '[ ... ]' and its values do not need to be of the same type.
 
 If you are you working with a target language such as JavaScript, it makes no difference which is used since it does not differenciate the tow.
+The exception being Commands, which must be enclosed in '( ... )'.
 For other languages where there is a difference, if there is a target parser for it, it will generate the correct output. 
 The JSON output may add this type information, should the need arise.
 
+Commas are optional within Lists and Arrays.
+
 ### Commands
+ 
+Commands are meant to run in sequence, without non-command values within the sequence.
+Thus, they must be enclosed in '( ... )'.
+Optonal commas are useful for readability of arguments to commands.
+Eg. If the function signature is f(x0, y0, x1, y1), you call it via `f 1 2, 3 -4;`
 */
 
-do: (         // Use "(" to enforce array structure
-  move 1 2 // No "," needed between non-keyvalue arguments
-  move 1 2, 3 -4 // For readability, commas can be inserted between arguments.
-    // Commas don't change the way it is parsed.
-    // This is good for calling functions whose signature is
-    // Eg. f(x0, y0, x1, y1), and you like the call to be more readable
-  move [1,2] [3,-4] // To pass list of lists
-  move [1 2] [3 -4] // Same
-  move (1,2) (3,-4) // Same, if you prefer "()"s for coordinates
-  move (1 2) (3 -4) // Same
-  turn { x:1, y:2 } // One key-values map
-  turn x:1 y:2      // Multi-signle key-values 
+a:1,
+b:[1 2],
+do: (             // Use "(" to enforce array structure
+  move 1 2;
+  move 1 2;       // No "," needed between non-keyvalue arguments
+  move 1 2, 3 -4; // For readability, commas can be inserted between arguments.
+  move [1,2] [3,-4]; // To pass list of lists
+  move [1 2] [3 -4]; // Same
+  move (1,2) (3,-4); // Same, if you prefer "()"s for coordinates
+  move (1 2) (3 -4); // Same
+  turn { x:1},{y:2 }; // Two key-values map
+  turn { x:1, y:2 };  // One key-values map
+  turn x:1, y:2;      // One key-values map
+  turn left 1 right 2;
 )
 //
  //

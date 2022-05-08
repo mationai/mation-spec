@@ -3,8 +3,9 @@ mationGrammar {
   
   KeyValue = Key ":" Value
   KeyValues = KeyValuesNoBrace | KeyValuesBraced
-  KeyValuesNoBrace = NonemptyListOf<KeyValue, ","> ","?
+  KeyValuesNoBrace = NonemptyListOf<KeyValue, ","> ","? // Nonempty needed for parent+
   KeyValuesBraced = "{" KeyValuesNoBrace "}"
+  KeyValuesBracedArray = (KeyValuesBraced ","?)*
   Key
     = identifier
     | stringLiteral
@@ -19,9 +20,9 @@ mationGrammar {
     | Command
     
   Values = (Value ","?)*
-  Commands = (Command ","?)*
+  Commands = (Command ";")* // ';' required
   Identifiers = (identifier ","?)* // Need syntactic rule (Caps), lexical rule fails parsing "(1, 2)" 
-  Literals = (literal ","?)*  // Same
+  Literals = (literal ","?)*       // Same
   Lists = (List ","?)*
   Arrays = (Array ","?)*
   
@@ -32,13 +33,15 @@ mationGrammar {
     | "(" Identifiers ")"
     | "(" Lists ")"
     | "(" Arrays ")"
+    | "(" KeyValuesBracedArray ")"
   
   // Lists and Command args do not enforce same type as Arrays
   List = "[" Values "]"
-  Command = identifier Values
+    // | "[" Commands "]"
+  Command = identifier Values// ";"
 
   markdown = mdStart mdText mdEnd
-  mdStart = "/*" "*"* ws* mdLabel ws* "*"*
+  mdStart = "/" "*"+ ws+ mdLabel ws* "*"* nl
   mdLabel
     = caseInsensitive<"md">
     | caseInsensitive<"note">
