@@ -42,24 +42,23 @@ or: do-this, // dashed literal value
 /** md **
 ## Data Structures
 
-### Arrays and Lists
+### Lists and Arrays/Tuples
 
-Arrays are denoted with `( ... )` and will only contain values of the same type.
 Lists are denoted with `[ ... ]` and its values do not need to be of the same type.
+Arrays or Tuples are denoted with `( ... )` and will only contain values of the same type.
 
-If you are you working with a target language such as JavaScript, it makes no difference which is used since it does not differenciate the tow.
+If you are you working with a target language such as JavaScript, it makes no difference which is used since it does not differenciate the two.
 The exception being Commands, which must be enclosed in `()`.
-For other languages where there is a difference, if there is a target parser for it, it will generate the correct output. 
-The JSON output may add this type information, should the need arise.
+For other languages where there is a difference, the parser for if it exists, will generate the correct data structure. 
 
-Commas are optional within Lists and Arrays.
+Commas are optional within Lists and Arrays/Tuples.
 
 ### Commands
  
 Commands are meant to run in sequence, without non-command values mixed-in.
-Thus, they must be enclosed in an Array expression `( ... )`.
+Thus, they must be enclosed in an Array/Tuple expression `( ... )`.
 
-Command and its agruments will be parsed as an array of "name", arg1, arg2, ...`.
+Command and its agruments will be parsed as an array of `"name", arg1, arg2, ...`.
 If you rather have the arguments be enclosed in an array, or if your function takes in an array, then enclose the arugments in it.
 
 Optonal commas are useful for readability of arguments to commands.

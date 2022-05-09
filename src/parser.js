@@ -4,25 +4,6 @@ const parse = {}
 const parser = {}
 export default parser
 
-const commandsInfo = (nodes=[]) => {
-  const res = {
-    nonCommands: new Set(),
-  }
-  let commandsLen = 0
-  let hasCommands = false
-  for (let node of nodes) {
-    if (node.ctorName === 'Command') { // _iter if not named
-      commandsLen++
-      hasCommands = true
-    }
-    else res.nonCommands.add(node.ctorName)
-  }
-  res.isAllCommands = commandsLen === nodes.length
-  res.onlySomeCommands = hasCommands && !res.isAllCommands
-  console.log(res.isAllCommands)
-  return res
-}
-
 parse.literal = (literal={}) => {
   const { ctorName, sourceString } = literal.child(0)
   switch (ctorName) {
@@ -57,6 +38,55 @@ parse.singleton = (node={}) => {
   else throw new Error(`Type: ${node.ctorName} requires handling in parse.singleton`)
 }
 
+parse.Commands = (CommandsNode={}) => {
+  const resultValue = []
+  for (let Command of CommandsNode.child(0).children) {
+    const [identifier, Values] = Command.children
+    const args = []
+
+    for (let valuesIter of Values.child(0).children) {
+      const Value = valuesIter.child(0)
+      switch (Value.ctorName) {
+        case 'List':
+        case 'Array': {
+          const argChilds = Value.child(1).child(0).children
+          args.push(argChilds.map(c => parse.singleton(c)))
+          //* parse.singleton will throw Unsupported error if nested list/array
+          break
+        }
+        case 'KeyValuesBraced': {
+          const argChilds = Value.child(1).child(0).children
+          let arg = {}
+          for (let c of argChilds) {
+            const KeyValue = c.child(0)?.ctorName === 'KeyValue'
+              ? c.child(0) // single KeyValuesBraced
+              : c
+            if (KeyValue.child(0)?.ctorName !== '_terminal')
+              arg = { ...arg, ...KeyValue.toAST(mapping) }
+          }
+          args.push(arg)
+          break
+        }
+        case 'KeyValue': {
+          const argChilds = Values.child(0).children
+          let arg = {}
+          for (let c of argChilds)
+            arg = { ...arg, ...c.child(0).toAST(mapping)}
+          if (!args.length)
+            args.push(arg)
+          break
+        }
+        default: {
+          args.push(parse.singleton(Value))
+          break
+        }
+      }
+    }
+    resultValue.push([identifier.sourceString, ...args])
+  }
+  return resultValue
+}
+
 /**
  ** NOTE: Using mapping due to not able to get the semantics method to work. PRs welcome!
  */
@@ -77,64 +107,16 @@ const mapping = {
         return { [keyStr]: parse.literal(val) }
       case 'KeyValuesBraced':
         return { [keyStr]: Value } //* OK?
-      case 'Array':
-      case 'List': { // Should probably be its own mapping entry..
-        const pluralNode = val.child(1)
-        const childs = pluralNode.child(0).children
-        const cmdInfo = commandsInfo(childs)
-        if (cmdInfo.onlySomeCommands)
-          throw new Error(`Commands must not be mixed with non-command types (${cmdInfo.nonCommands})`)
+      case 'List':
+      case 'Array': { // Should probably be its own mapping entry..
+        const iterNode = val.child(1)
+        if (iterNode.ctorName === 'Commands')
+          return { [keyStr]: parse.Commands(iterNode) }
 
-        if (!cmdInfo.isAllCommands)
-          return {
-            [keyStr]: 
-            childs.map(node => parse.singleton(node))
+        return {
+          [keyStr]: iterNode.child(0).children
+            .map(c => parse.singleton(c))
           }
-
-        // isAllCommands
-        const resultValue = []
-        for (let cmdNode of childs) {
-          const [identifier, Values] = cmdNode.children
-          const args = []
-
-          for (let c of Values.child(0).children) {
-            const gChild = c.child(0)
-            const gcName = c.child(0).ctorName
-            if (gcName === 'List' || gcName === 'Array') {
-              const argChilds = gChild.child(1).child(0).children
-              args.push(argChilds.map(c => parse.singleton(c)))
-              //* parse.singleton will throw Unsupported error if nested list/array
-            }
-            
-            else if (gcName === 'KeyValuesBraced') {
-              const argChilds = gChild.child(1).child(0).children
-              let arg = {}
-              for (let c of argChilds) {
-                const KeyValue = c.child(0)?.ctorName === 'KeyValue'
-                  ? c.child(0) // single KeyValuesBraced
-                  : c
-                if (KeyValue.child(0)?.ctorName !== '_terminal')
-                  arg = { ...arg, ...KeyValue.toAST(mapping) }
-              }
-              args.push(arg)
-            }
-            else if (gcName === 'KeyValue') {
-              const argChilds = Values.child(0).children
-              let arg = {}
-              for (let c of argChilds) {
-                arg = { ...arg, ...c.child(0).toAST(mapping)}
-              }
-              if (!args.length)
-                args.push(arg)
-            }
-            else {
-              args.push(parse.singleton(gChild))
-            }
-          }
-
-          resultValue.push([identifier.sourceString, ...args])
-        }
-        return { [keyStr]: resultValue}
       }
       default:
         throw new Error(`case ${val.ctorName} requires handling`)

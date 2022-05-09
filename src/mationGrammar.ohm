@@ -17,10 +17,11 @@ mationGrammar {
     | literal
     | List  // []
     | Array // ()
-    | Command
+    | CommandValue // Command's result can be a value
     
+  CommandValue = "<" Command ">"
   Values = (Value ","?)*
-  Commands = (Command ";")*    // ';' is required
+  Commands = (Command ";")*     // ';' is required
   Identifiers = (identifier ","?)* // Need syntactic rule (Caps), lexical rule fails parsing "(1, 2)" 
   Literals = (literal ","?)*       // Same
   Lists = (List ","?)*
@@ -37,15 +38,15 @@ mationGrammar {
   
   // Lists and Command args do not enforce same type as Arrays
   List = "[" Values "]"
-      | "[" Commands "]"
-  Command = identifier Values// ";"
+      // | "[" Commands "]"
+  Command = identifier Values
 
   markdown = mdStart mdText mdEnd
   mdStart = "/" "*"+ ws+ mdLabel ws* "*"* nl
   mdLabel
     = caseInsensitive<"md">
     | caseInsensitive<"note">
-  mdText = (~"*/" any)* // To be expanded
+  mdText = (~"*/" any)* // TODO: expand
   mdEnd = "*/"
   
   comment = "//" (~nl any)* (nl | end)
