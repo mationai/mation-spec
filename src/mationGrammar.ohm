@@ -20,7 +20,7 @@ mationGrammar {
     | Command
     
   Values = (Value ","?)*
-  Commands = (Command ";")* // ';' required
+  Commands = (Command ";")*    // ';' is required
   Identifiers = (identifier ","?)* // Need syntactic rule (Caps), lexical rule fails parsing "(1, 2)" 
   Literals = (literal ","?)*       // Same
   Lists = (List ","?)*
@@ -37,7 +37,7 @@ mationGrammar {
   
   // Lists and Command args do not enforce same type as Arrays
   List = "[" Values "]"
-    // | "[" Commands "]"
+      | "[" Commands "]"
   Command = identifier Values// ";"
 
   markdown = mdStart mdText mdEnd

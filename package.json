@@ -2,14 +2,19 @@
   "name": "mation-spec",
   "version": "0.1.0",
   "description": "Readable Configuration Specification Format for Automation and Task Runners",
-  "main": "index.js",
+  "main": "src/api.js",
+  "packageManager": "yarn@3.2.0",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest"
   },
   "keywords": [],
   "author": "John Leung",
   "license": "Apache-2.0",
   "dependencies": {
     "ohm-js": "^16.3.4"
+  },
+  "devDependencies": {
+    "vite": "^2.9.8",
+    "vitest": "^0.12.0"
   }
 }

@@ -27,11 +27,14 @@ For certain applications, documentation may be of much greater importance than c
 
 ### Development
 
-Install pnpm (or yarn/npm), then
-```cs
-pnpm install
-```
+This project uses [yarn berry PnP](https://yarnpkg.com/features/pnp) as the package manager. It features Zero-Install, which means instead of requiring developers to install and build `node_modules`, a much smaller version of it is checked into the repo (`.pnp.*` `.yarnrc.yml`, `yarn.lock`, and `.yarn`. TLDR - No install needed, you're good to go upon checking out the repo.
 
+### Tests
+
+```cs
+yarn test
+yarn test test/some-specific.test.js // test 1 file 
+```
 
 ## Details
 
@@ -58,22 +61,25 @@ JSON is the default standard when one thinks about configuration and data exchan
 ## Roadmap
 
 ## High Priority
-[ ] Tree Parser
-[ ] Extensive Unit Tests
-[ ] Common Data Types
-[ ] Syntax highlighter for VSCode
-[ ] Usage Examples
-[ ] Better Documentation
+- [ ] Parser with Extensive Unit Tests
+- [ ] Common Data Types
+- [ ] Syntax highlighter for VSCode
+- [ ] Usage Examples
+- [ ] Better Documentation
 
 ## Mid Priority
-[ ] Meta variables
-[ ] String templates
-[ ] Code block values
-[ ] Syntax highlighter for browser editors 
-[ ] Syntax highlighter for major editors 
-[ ] Parser for other languages 
+- [ ] Meta variables
+- [ ] String templates
+- [ ] Code block values
+- [ ] Syntax highlighter for browser editors 
+- [ ] Syntax highlighter for major editors 
+- [ ] Parser for other languages 
 
 ## Anti-Roadmap
 
 To keep Mation simple, it will not support:
 - String line continuations - use string templates for multi-line strings 
+
+## LICENSE
+
+Apache 2.0

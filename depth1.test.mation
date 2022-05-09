@@ -44,11 +44,11 @@ or: do-this, // dashed literal value
 
 ### Arrays and Lists
 
-Arrays are denoted with '( ... )' and will only contain values of the same type.
-Lists are denoted with '[ ... ]' and its values do not need to be of the same type.
+Arrays are denoted with `( ... )` and will only contain values of the same type.
+Lists are denoted with `[ ... ]` and its values do not need to be of the same type.
 
 If you are you working with a target language such as JavaScript, it makes no difference which is used since it does not differenciate the tow.
-The exception being Commands, which must be enclosed in '( ... )'.
+The exception being Commands, which must be enclosed in `()`.
 For other languages where there is a difference, if there is a target parser for it, it will generate the correct output. 
 The JSON output may add this type information, should the need arise.
 
@@ -56,17 +56,21 @@ Commas are optional within Lists and Arrays.
 
 ### Commands
  
-Commands are meant to run in sequence, without non-command values within the sequence.
-Thus, they must be enclosed in '( ... )'.
+Commands are meant to run in sequence, without non-command values mixed-in.
+Thus, they must be enclosed in an Array expression `( ... )`.
+
+Command and its agruments will be parsed as an array of "name", arg1, arg2, ...`.
+If you rather have the arguments be enclosed in an array, or if your function takes in an array, then enclose the arugments in it.
+
 Optonal commas are useful for readability of arguments to commands.
 Eg. If the function signature is f(x0, y0, x1, y1), you call it via `f 1 2, 3 -4;`
 */
 
 a:1,
 b:[1 2],
-do: (             // Use "(" to enforce array structure
-  move 1 2;
+do: [             // Use "(" to enforce array structure
   move 1 2;       // No "," needed between non-keyvalue arguments
+  move [1 2];
   move 1 2, 3 -4; // For readability, commas can be inserted between arguments.
   move [1,2] [3,-4]; // To pass list of lists
   move [1 2] [3 -4]; // Same
@@ -76,6 +80,7 @@ do: (             // Use "(" to enforce array structure
   turn { x:1, y:2 };  // One key-values map
   turn x:1, y:2;      // One key-values map
   turn left 1 right 2;
-)
+//  move [[1 2]];
+]
 //
  //
