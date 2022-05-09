@@ -11,7 +11,7 @@ mationGrammar {
     | stringLiteral
     | numericLiteral
   Value
-    = KeyValue // keyvalue before identifier else ':' won't match 
+    = KeyValue // keyvalue before identifier to match ':'
     | KeyValuesBraced
     | identifier
     | literal
