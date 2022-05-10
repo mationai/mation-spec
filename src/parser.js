@@ -24,15 +24,15 @@ parse.literal = (literal={}) => {
   throw new Error(`Handler missing for literal of type: ${ctorName}`)
 }
 
-parse.List = (iterNode={}) => {
-  if (iterNode.ctorName === 'Commands')
-    return iterNode.child(0).children.map(c => parse.Command(c))
-  if (iterNode.ctorName === 'Values')
-    return iterNode.child(0).children.map(c => parse.Value(c))
-  return iterNode.children.map(c => parse.Value(c))
+parse.List = (iter={}) => {
+  if (iter.ctorName === 'Commands')
+    return iter.child(0).children.map(c => parse.Command(c))
+  if (iter.ctorName === 'Values')
+    return iter.child(0).children.map(c => parse.Value(c))
+  return iter.children.map(c => parse.Value(c))
 }
 
-parse.KeyValue = (Key, Value) => {
+parse.KeyValue = (Key={}, Value={}) => {
   const key = Key.child(0)
   const value = Value.child(0)
   const keyStr = key.ctorName === 'stringLiteral'
@@ -41,11 +41,14 @@ parse.KeyValue = (Key, Value) => {
   return { [keyStr]: parse.Value(value) }
 },
 
-parse.KeyValuesMap = (node) => {
-  let arg = {}
-  for (let child of innerChilds(node))
-    arg = { ...arg, ...child.toAST(mapping) }
-  return arg
+parse.Map = (node={}, nodeIsKeyValues=false) => {
+  let res = {}
+  const childs = nodeIsKeyValues
+    ? node.children
+    : innerChilds(node)
+  for (let c of childs)
+    res = { ...res, ...parse.KeyValue(c.child(0), c.child(2)) }
+  return res
 }
 
 parse.Value = (node={}) => {
@@ -60,8 +63,8 @@ parse.Value = (node={}) => {
       return parse.List(node.child(1))
     case 'KeyValue':
       return parse.KeyValue(node.child(0), node.child(2))
-    case 'KeyValuesMap':
-      return parse.KeyValuesMap(node)
+    case 'Map':
+      return parse.Map(node)
   }
   throw new Error(`Handler missing for Value of type: ${node.ctorName}`)
 }
@@ -76,8 +79,8 @@ parse.Command = (Command={}) => {
       case 'List':
         res.push(innerChilds(Value).map(c => parse.Value(c)))
         break
-      case 'KeyValuesMap': {
-        res.push(parse.KeyValuesMap(Value))
+      case 'Map': {
+        res.push(parse.Map(Value))
         break
       }
       default: {
@@ -90,16 +93,19 @@ parse.Command = (Command={}) => {
 }
 
 /**
- * Mapping for initial match only
+ * Mapping for top-level match only
  */
 const mapping = {
-  KeyValue: (Key, _colon, Value) => {
-    return parse.KeyValue(Key, Value)
-  },
-  markdown: (_0, s, _1) => {
+  KeyValues: (KeyValues, _comma) => {
     return {
-      type: 'markdown',
-      text: s.sourceString,
+      type: 'Map',
+      value: parse.Map(KeyValues, true)
+    }
+  },
+  markdown: (_0, node, _1) => {
+    return {
+      type: 'Markdown',
+      value: node.sourceString,
     }
   }
 }
@@ -119,27 +125,25 @@ const mapping = {
  */
 parser.parse = (userText, g, options={}) => {
   const match = g.match(userText)
-  const { outputAST, outputMD } = options
-
   if (!match.succeeded())
     console.error('Match failed: '+match.message)
 
-  const mappedAST = toAST(match, mapping)
+  const { outputAST, outputMD } = options
   const markdowns = []
+  const mappedAST = toAST(match, mapping)
   let result = {}
 
   for (let o of mappedAST) {
-    if (o.type  === 'markdown')
-      markdowns.push(o.text)
+    if (o.type  === 'Markdown')
+      markdowns.push(o.value)
     else
-      result = { ...result, ...o[0][0] }
+      result = { ...result, ...o.value }
   }
-  const out = { result }
 
+  const out = { result }
   if (outputAST)
     out.AST = toAST(match)
   if (outputMD)
     out.markdowns = markdowns
-// console.log(JSON.stringify(out.result))
   return out
 }

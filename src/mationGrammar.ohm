@@ -1,16 +1,17 @@
 mationGrammar {
-  Program = (markdown | KeyValuePairs)*
+  Program = (markdown | KeyValues)*
   
-  KeyValuePairs = (KeyValue ","?)+ //> ","?  // Nonempty needed for + on parent
+  KeyValues = (KeyValue ","?)+ //> ","?  // Nonempty needed for + on parent
   KeyValue = Key ":" Value
-  KeyValuesMap = "{" KeyValuePairs "}"
+  Map = "{" KeyValues "}"
+
   Key
     = identifier
     | stringLiteral
     | numericLiteral
   Value
     = KeyValue
-    | KeyValuesMap
+    | Map
     | identifier
     | literal
     | List

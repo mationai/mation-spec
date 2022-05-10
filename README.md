@@ -36,20 +36,133 @@ yarn test
 yarn test test/some-specific.test.js // test 1 file 
 ```
 
-## Details
+## Overview
 
-### Features at a Glance
+Top level Entries in Mation files must be either Key-value pairs or Markdown text
 
-Let's jump right into some of the features...
+### Key Values 
+
+Key-values are unordered pairs, also known as a map. They are enclosed in `{ ... }`, except for top-level entries.
+You can think of top-level entries as key-value pairs enclosed in an invisible `{}`.
+
+#### Keys
+
+Keys can be unquoted as long as they do not contain spaces and start with legal literal characters of a..z|A..Z|0..9|'$'|'_'|'@'|
+Non-starting characters can contain other legal literal characters after the first character, which includes '-'|
+
+Duplicate keys are allowed. But API can be (later) configured to catch and throw error on duplicate keys within the same level.
+
+#### Values 
+
+(Revisit)
+Commas are required after each but last pair, which can be inserted or omitted.
+
+Example:
+```js
+'a': 1,      // Line comment starts with "//" and extends to end of line
+b: 1,        // Unquoted key
+"b": 2,      // Duplicate key will overwrite previous definition of b:1
+try-to: do,  // Can use dashed literal keys, as long as first character isn't '-'
+or: do-this, // Same with dashed literal values. Both will be parsed as quoted 
+```
+
+### Markdown Notes
+
+Mation enables styled documentation within the file.
+This and the section above are Markdown notes.
+
+Markdown notes can appear anywhere above or in top-level between key-value definitions.
+Markdown notes are denoted by Start and End tags.
+Syntax highlighting is provided in supported editors and viewers.
+
+Start tag is
+`/** <case insensitive 'md'|'note'> **`
+
+End tag is the standard C-style block-comment end tag '*/'.
 
 
-### Detail Syntax Example
+### Data Structure
 
+#### Arrays
+
+Key Values Map is described above (enclosed within `{` and `}`).
+Arrays are enclosed within `[` and `]`.
+Commas are optional within Arrays.
+
+#### Commands
+ 
+Commands is the main feature of Mation file.
+
+Command and its agruments will be parsed as an array, `["name", arg1, arg2, ...]`.
+
+Commas are optional between arguments.
+Optonal commas are useful for readability of arguments to commands.
+Eg. If the function signature is f(x0, y0, x1, y1), you call it via `f 1 2, 3 -4;`
+
+If the only one parameter your function takes is an array, then enclose the arugments in one.
+
+Key-value arugments not enclosed in `{}` is assumed to be a single key-value pair.
+For example, `f x:1 y:2` or `f x:1, y:2` is parsed as `['f', {x: 1}, {y: 2}]`.
+To have it parsed as a single map, enclose them in `{}`.
+
+Example:
+```js
+author: 'Sam',
+config: {a:1 b:2},
+steps: [do turns],
+do: [
+  move 1 2;       // No "," needed between non-keyvalue arguments
+  move [1 2];
+  move 1 2, 3 -4; // For readability, commas can be inserted between arguments.
+  move [1,2] [3,-4]; // To pass list of lists
+  move [1 2] [3 -4]; // Same
+]
+turns: [
+  turn { x:1, y:2 };  // One key-values map
+  turn { x:1},{y:2 }; // Two key-values map
+  turn x:1, y:2;      // Two key-values map
+  turn x:1  y:2;      // Two key-values map
+  turn left 1 right 2;
+]
+```
 
 ### Data Types
 
-Property value can be one of the following types:
+The following Values will be parsed:
 
+- Numbers: same Number type as JavaScript
+- String: Non-number and invalid character leading identifiers will be parsed as strings.
+
+### Usage
+
+(When package is published)
+
+```js
+import { parse } from '../src/api'
+
+const result = parse(`
+  a: 1,
+  b: 2,    
+  /** md **
+  notes
+  */
+  c: 3,    
+  /** md **
+  more notes
+  */
+`, { outputMD: true })
+// result is:
+{
+  result: {
+    a: 1,
+    b: 2,
+    c: 3,
+  },
+  markdowns: ['notes\n', 'more notes']
+}
+```
+
+See [/examples](./examples/) for more in depth examples.
 
 ## Comparison
 
@@ -61,8 +174,8 @@ JSON is the default standard when one thinks about configuration and data exchan
 ## Roadmap
 
 ## High Priority
+- [x] Strings and Numbers
 - [ ] Parser with Extensive Unit Tests
-- [ ] Common Data Types
 - [ ] Syntax highlighter for VSCode
 - [ ] Usage Examples
 - [ ] Better Documentation

@@ -1,45 +1,33 @@
-//  "//" 
- //
-// Line comment starts with "//" and extends to end of line
-
-// Top level must be key-value pairs, which is denoted by `A: B`
 /** md **
-Entries in Mation files must be Key-value pairs or Markdown
 
-## Markdown
+## Overview
 
-Mation enables styled documentation within the file.
-Markdown sections can appear anywhere in top-level between key-value definitions.
-Markdown notes are denoted by start and end tags.
-Syntax highlighting is provided in supported editors.
+Top level Entries in Mation files must be either Key-value pairs or Markdown text
 
-Start tag is
-/** <case insensitive 'md'|'note'> **
+### Key Values 
 
-End tag is the standard C-style block-comment end tag '*' follow immediately by '/'.
-
-## Key Values 
-
-Key-values are unordered pairs, or a map.  They are enclosed in `{ ... }`, except for top-level entries.
+Key-values are unordered pairs, also known as a map. They are enclosed in `{ ... }`, except for top-level entries.
 You can think of top-level entries as key-value pairs enclosed in an invisible `{}`.
 
-### Keys
+#### Keys
 
 Keys can be unquoted as long as they do not contain spaces and start with legal literal characters of a..z|A..Z|0..9|'$'|'_'|'@'|
 Non-starting characters can contain other legal literal characters after the first character, which includes '-'|
 
 Duplicate keys are allowed. But API can be (later) configured to catch and throw error on duplicate keys within the same level.
 
-### Values 
+#### Values 
 
 (Revisit)
 Commas are required after each but last pair, which can be inserted or omitted.
 */
 
-a: 1,        // unquoted key
-a: 2,        // duplicate key
-"akey": 2,   // double quotes
-'key2': 2,   // single quotes
+'a': 1,      // Line comment starts with "//" and extends to end of line
+b: 1,        // Unquoted key
+"b": 2,      // Duplicate key will overwrite previous definition of b:1
+try-to: do,  // Can use dashed literal keys, as long as first character isn't '-'
+or: do-this, // Same with dashed literal values. Both will be parsed as quoted 
+
 '"k"' : 2,   // double within single quotes
 "'k'" : 2,   // single within double quotes
 "\"k" : 2,   // use escape character '\x' will appear vebatem as is
@@ -47,23 +35,37 @@ try-to: do,  // dashed literal key
 or: do-this, // dashed literal value 
 
 /** md **
-## Data Structures
 
-### Lists/Arrays
+### Markdown
 
-Lists are denoted with `[ ... ]` and its values do not need to be of the same type.
-Arrays or Tuples are denoted with `( ... )` and will only contain values of the same type.
+Mation enables styled documentation within the file.
+This and the section above are Markdown notes.
 
-If you are you working with a target language such as JavaScript, it makes no difference which is used since it does not differenciate the two.
-The exception being Commands, which must be enclosed in `()`.
-For other languages where there is a difference, the parser for if it exists, will generate the correct data structure. 
+Markdown notes can appear anywhere above or in top-level between key-value definitions.
+Markdown notes are denoted by Start and End tags.
+Syntax highlighting is provided in supported editors and viewers.
 
-Commas are optional within Lists and Arrays/Tuples.
+Start tag is
+`/** <case insensitive 'md'|'note'> **`
 
-### Commands
- 
-Ending ';' is required for Commands.
-Command and its agruments will be parsed as an array of `"name", arg1, arg2, ...`.
+End tag is the standard C-style block-comment end tag '*' follow immediately by '/'.
+*/
+
+/** md **
+
+### Data Structure
+
+#### Arrays
+
+Key Values Map is described above (enclosed within `{` and `}`).
+Arrays are enclosed within `[` and `]`.
+Commas are optional within Arrays.
+
+#### Commands
+Commands is the main feature of Mation file.
+
+Command and its agruments will be parsed as an array, `["name", arg1, arg2, ...]`.
+
 Commas are optional between arguments.
 Optonal commas are useful for readability of arguments to commands.
 Eg. If the function signature is f(x0, y0, x1, y1), you call it via `f 1 2, 3 -4;`
@@ -75,19 +77,20 @@ For example, `f x:1 y:2` or `f x:1, y:2` is parsed as `['f', {x: 1}, {y: 2}]`.
 To have it parsed as a single map, enclose them in `{}`.
 */
 
-a:1,
-b:[1 2],
+author: 'Sam',
+config: {a:1 b:2},
+steps: [do turns],
 do: [
   move 1 2;       // No "," needed between non-keyvalue arguments
   move [1 2];
   move 1 2, 3 -4; // For readability, commas can be inserted between arguments.
   move [1,2] [3,-4]; // To pass list of lists
   move [1 2] [3 -4]; // Same
+]
+turns: [
   turn { x:1, y:2 };  // One key-values map
   turn { x:1},{y:2 }; // Two key-values map
   turn x:1, y:2;      // Two key-values map
   turn x:1  y:2;      // Two key-values map
   turn left 1 right 2;
 ]
-//
- //
