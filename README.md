@@ -22,8 +22,34 @@ For certain applications, documentation may be of much greater importance than c
 
 ## Usage
 
-```cs
+```js
+import { parse } from './src/api'
+// import { parse } from 'mation-spec' // When package is published
+
+const result = parse(`
+  a: 1,
+  b: 2,    
+  /** md **
+  notes
+  */
+  c: 3,    
+  /** md **
+  more notes
+  */
+`, { outputMD: true })
+// result is:
+{
+  result: {
+    a: 1,
+    b: 2,
+    c: 3,
+  },
+  markdowns: ['notes\n', 'more notes']
+}
 ```
+
+See [/examples](./examples/) for more in depth examples.
+
 
 ### Development
 
@@ -133,36 +159,6 @@ The following Values will be parsed:
 - Numbers: same Number type as JavaScript
 - String: Non-number and invalid character leading identifiers will be parsed as strings.
 
-### Usage
-
-(When package is published)
-
-```js
-import { parse } from '../src/api'
-
-const result = parse(`
-  a: 1,
-  b: 2,    
-  /** md **
-  notes
-  */
-  c: 3,    
-  /** md **
-  more notes
-  */
-`, { outputMD: true })
-// result is:
-{
-  result: {
-    a: 1,
-    b: 2,
-    c: 3,
-  },
-  markdowns: ['notes\n', 'more notes']
-}
-```
-
-See [/examples](./examples/) for more in depth examples.
 
 ## Comparison
 
