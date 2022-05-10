@@ -84,7 +84,7 @@ do: [
   move 1 2;       // No "," needed between non-keyvalue arguments
   move [1 2];
   move 1 2, 3 -4; // For readability, commas can be inserted between arguments.
-  move [1,2] [3,-4]; // To pass list of lists
+  move [1,2] [3,-4]; // To pass multiple arrays
   move [1 2] [3 -4]; // Same
 ]
 turns: [

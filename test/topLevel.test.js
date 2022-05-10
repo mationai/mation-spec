@@ -23,19 +23,26 @@ test(`Top level - KeyValues wtih identifier keys mixed with Markdowns`, () => {
   })
 })
 
-test.skip(`Top level - quoted keys`, () => {
+test(`Top level - Non-JS allowed starting character identifiers`, () => {
   expect(parse(`
-    "akey": 2,   // double quotes
-    'key2': 2,   // single quotes
-    '"k"' : 2,   // double within single quotes
-    "'k'" : 2,   // single within double quotes
-    // "\"k" : 2,   // use escape character will appear vebatem as is
+    #key: #val,     // #
+    @key: @val,   // single quotes
   `).result)
   .toStrictEqual({
-    "akey": 2,
-    'key2': 2,
+    "#key": '#val',
+    '@key': '@val',
+  })
+})
+
+test(`Top level - Wried quotation keys`, () => {
+  expect(parse(`
+    '"k"' : 2,   // double within single quotes
+    "'k'" : 2,   // single within double quotes
+    '\"k' : 2,   // escape characters
+  `).result)
+  .toStrictEqual({
     '"k"' : 2,
     "'k'" : 2,
-    // "\"k" : 2,
+    '\"k' : 2,
   })
 })

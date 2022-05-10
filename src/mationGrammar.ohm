@@ -44,8 +44,8 @@ mationGrammar {
   identName = identStart identPart*
   identStart = letter | unicode | "$" | "_" | otherIStart
   identPart = identStart | digit | otherIPart
-  otherIStart = "@" // TODO: Add more
-  otherIPart = "-" | "+" // TODO: Add more
+  otherIStart = "@" | "#"
+  otherIPart = "-" | "+"
   
   unicode = unicodeStart unicodePart*
   unicodeStart = "\\" unicodeEscSeq

@@ -21,7 +21,7 @@ test(`Commands - 1-liner w/ random comma between args`, () => {
   ]})
 })
 
-test(`Commands - Variations of array/list args`, () => {
+test(`Commands - Variations of Array args`, () => {
   expect(parse(`do: [
     move [1,2] [3 -4];
     move [1 2],[3 -4];
