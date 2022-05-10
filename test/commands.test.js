@@ -1,17 +1,16 @@
 import { test, expect } from 'vitest'
 import { parse } from '../src/api'
 
-// TODO: (( )) & [[ ]]
 test(`Commands - Single argument`, () => {
-    // move [[1 2]];
   expect(parse(`do: [ // comment after '['
     move 1 2;
     move [1 2];
+    move [[1 2]];
   ]`).result)
   .toStrictEqual({ do: [
     ['move', 1, 2],
     ['move', [1, 2]],
-    // ['move', [[1, 2]]],
+    ['move', [[1, 2]]],
   ]})
 })
 
@@ -47,16 +46,27 @@ test(`Commands - Variations of Single keyvalues map arg`, () => {
   ]})
 })
 
-test.skip(`Commands - Variations of Multiple keyvalues map args`, () => {
-    // turn x:1  y:2;
-    // turn {x:1} {y:2};
+test(`Commands - Variations of Multiple single keyvalues map args`, () => {
   expect(parse(`do: [
     turn x:1, y:2;
-  ] // comment after')'`).result)
+    turn x:1  y:2;
+    turn {x:1} {y:2};
+  ] // comment after ']'`).result)
   .toStrictEqual({ do: [
-    // ['turn', {x: 1}, {y: 2}],
-    // ['turn', {x: 1}, {y: 2}],
     ['turn', {x: 1}, {y: 2}],
+    ['turn', {x: 1}, {y: 2}],
+    ['turn', {x: 1}, {y: 2}],
+  ]})
+})
+
+test(`Commands - Variations of Multiple keyvalues map args`, () => {
+  expect(parse(`do: [
+    turn { x:1  y:2 } { how: {speed:1 angle:2}} onError: 'Stuck!';
+    turn onError: 'Stuck!' { x:1  y:2 } { how: {speed:1 angle:2}};
+  ]`).result)
+  .toStrictEqual({ do: [
+    ['turn', {x:1, y:2}, {how: {speed:1, angle:2}}, {onError: 'Stuck!'}],
+    ['turn', {onError: 'Stuck!'}, {x:1, y:2}, {how: {speed:1, angle:2}}],
   ]})
 })
 

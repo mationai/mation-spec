@@ -5,7 +5,7 @@ const parse = {}
 const parser = {}
 export default parser
 
-const getEnclosedChilds = (node={}) => {
+const innerChilds = (node={}) => {
   return node.child(1).child(0).children // child(1) left-terminal, eg. [, {, <, (
 }
 
@@ -19,121 +19,82 @@ parse.literal = (literal={}) => {
     case 'numericLiteral':
       return Number(sourceString)
     case 'stringLiteral':
-      return child.sourceString.slice(1, -1)
+      return sourceString.slice(1, -1)
   }
-  throw new Error(`literal of type: ${ctorName} requires handling`)
+  throw new Error(`Handler missing for literal of type: ${ctorName}`)
 }
+
 parse.List = (iterNode={}) => {
-  return iterNode.ctorName === 'Commands'
-    // ? parse.Commands(iterNode)
-    ? iterNode.child(0).children.map(c => parse.Command(c))
-    : iterNode.children.map(c => parse.singleValue(c))
+  if (iterNode.ctorName === 'Commands')
+    return iterNode.child(0).children.map(c => parse.Command(c))
+  if (iterNode.ctorName === 'Values')
+    return iterNode.child(0).children.map(c => parse.Value(c))
+  return iterNode.children.map(c => parse.Value(c))
 }
-// TODO - merge w/ singleValue?
-parse.Value = (Value={}) => {
-  const node = Value.child(0)
-  switch (node.ctorName) {
-    case 'literal':
-      return parse.literal(node)
-  }
-  throw new Error(`Value of type: ${node.ctorName} requires handling`)
+
+parse.KeyValue = (Key, Value) => {
+  const key = Key.child(0)
+  const value = Value.child(0)
+  const keyStr = key.ctorName === 'stringLiteral'
+    ? key.sourceString.slice(1, -1)
+    : key.sourceString
+  return { [keyStr]: parse.Value(value) }
+},
+
+parse.KeyValuesMap = (node) => {
+  let arg = {}
+  for (let child of innerChilds(node))
+    arg = { ...arg, ...child.toAST(mapping) }
+  return arg
 }
-// parse.KeyValue = (node={}) => {
-//   const keyNode = node.child(0)
-//   const valNode = Value.child(0)
 
-//   let keyStr = keyNode.sourceString
-//   if (keyNode.ctorName === 'stringLiteral')
-//     keyStr = keyStr.slice(1, -1)
-
-
-//         const argChilds = Values.child(0).children
-//         let arg = {}
-//         for (let c of argChilds)
-//           arg = { ...arg, ...c.child(0).toAST(mapping)}
-//         if (!args.length)
-//           res.push(arg)
-//         break
-//       }
-
-parse.singleValue = (node={}) => {
+parse.Value = (node={}) => {
   switch (node.ctorName) {
-    // case '_terminal':
-    //   return node.sourceString
     case 'literal':
       return parse.literal(node)
     case 'Value':
-      return parse.Value(node)
+      return parse.Value(node.child(0))
     case 'identifier':
       return String(node.sourceString)
     case 'List':
       return parse.List(node.child(1))
+    case 'KeyValue':
+      return parse.KeyValue(node.child(0), node.child(2))
+    case 'KeyValuesMap':
+      return parse.KeyValuesMap(node)
   }
-  throw new Error(`Single value of ${node.ctorName} requires handling in parse.singleValue`)
+  throw new Error(`Handler missing for Value of type: ${node.ctorName}`)
 }
 
 parse.Command = (Command={}) => {
   const [identifier, Values] = Command.children
-  const args = []
   const res = [identifier.sourceString]
 
   for (let valuesIter of Values.child(0).children) {
     const Value = valuesIter.child(0)
     switch (Value.ctorName) {
       case 'List':
-        res.push(getEnclosedChilds(Value)
-          .map(c => parse.singleValue(c)))
+        res.push(innerChilds(Value).map(c => parse.Value(c)))
         break
       case 'KeyValuesMap': {
-        const argChilds = getEnclosedChilds(Value)
-        let arg = {}
-        for (let c of argChilds) {
-          const KeyValue = c.child(0)?.ctorName === 'KeyValue'
-            ? c.child(0) // single KeyValuesBraced
-            : c
-          if (KeyValue.child(0)?.ctorName !== '_terminal')
-            arg = { ...arg, ...KeyValue.toAST(mapping) }
-        }
-        res.push(arg)
+        res.push(parse.KeyValuesMap(Value))
         break
       }
-
       default: {
-        res.push(parse.singleValue(Value))
+        res.push(parse.Value(Value))
         break
       }
     }
   }
-  console.log(res)
   return res
 }
 
 /**
- * Mapping for global Program entries (only)
+ * Mapping for initial match only
  */
 const mapping = {
-  KeyValue: function(Key, _colon, Value) {
-    const keyNode = Key.child(0)
-    const valNode = Value.child(0)
-
-    let keyStr = keyNode.sourceString
-    if (keyNode.ctorName === 'stringLiteral')
-      keyStr = keyStr.slice(1, -1)
-
-    switch (valNode.ctorName) {
-      case 'identifier':
-        return { [keyStr]: valNode.sourceString }
-      case 'literal':
-        return { [keyStr]: parse.literal(valNode) }
-      case 'KeyValue':
-        return { [keyStr]: parse.Value(valNode) }//.child(0)) }
-      case 'KeyValuesBraced':
-        return { [keyStr]: parse.Value(valNode.child(1)) }
-      case 'List':
-        return { [keyStr]: parse.List(valNode.child(1)) }
-      default:
-        throw new Error(`case ${val.ctorName} requires handling`)
-    }
+  KeyValue: (Key, _colon, Value) => {
+    return parse.KeyValue(Key, Value)
   },
   markdown: (_0, s, _1) => {
     return {

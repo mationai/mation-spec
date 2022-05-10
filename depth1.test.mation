@@ -4,17 +4,24 @@
 
 // Top level must be key-value pairs, which is denoted by `A: B`
 /** md **
-## Basics
+Entries in Mation files must be Key-value pairs or Markdown
 
-### Markdown
+## Markdown
 
-Mation enables styled documentation for configuration files. Lines between markdown denoted start and end tags will be syntax highlighted in supported editors.
-Markdown documentation sections can appear anywhere except in-between a key-value definition.
+Mation enables styled documentation within the file.
+Markdown sections can appear anywhere in top-level between key-value definitions.
+Markdown notes are denoted by start and end tags.
+Syntax highlighting is provided in supported editors.
 
 Start tag is
 /** <case insensitive 'md'|'note'> **
 
 End tag is the standard C-style block-comment end tag '*' follow immediately by '/'.
+
+## Key Values 
+
+Key-values are unordered pairs, or a map.  They are enclosed in `{ ... }`, except for top-level entries.
+You can think of top-level entries as key-value pairs enclosed in an invisible `{}`.
 
 ### Keys
 
@@ -25,7 +32,7 @@ Duplicate keys are allowed. But API can be (later) configured to catch and throw
 
 ### Values 
 
-### Key Value Pairs 
+(Revisit)
 Commas are required after each but last pair, which can be inserted or omitted.
 */
 
@@ -42,7 +49,7 @@ or: do-this, // dashed literal value
 /** md **
 ## Data Structures
 
-### Lists and Arrays/Tuples
+### Lists/Arrays
 
 Lists are denoted with `[ ... ]` and its values do not need to be of the same type.
 Arrays or Tuples are denoted with `( ... )` and will only contain values of the same type.
@@ -55,31 +62,32 @@ Commas are optional within Lists and Arrays/Tuples.
 
 ### Commands
  
-Commands are meant to run in sequence, without non-command values mixed-in.
-Thus, they must be enclosed in an Array/Tuple expression `( ... )`.
-
+Ending ';' is required for Commands.
 Command and its agruments will be parsed as an array of `"name", arg1, arg2, ...`.
-If you rather have the arguments be enclosed in an array, or if your function takes in an array, then enclose the arugments in it.
-
+Commas are optional between arguments.
 Optonal commas are useful for readability of arguments to commands.
 Eg. If the function signature is f(x0, y0, x1, y1), you call it via `f 1 2, 3 -4;`
+
+If the only one parameter your function takes is an array, then enclose the arugments in one.
+
+Key-value arugments not enclosed in `{}` is assumed to be a single key-value pair.
+For example, `f x:1 y:2` or `f x:1, y:2` is parsed as `['f', {x: 1}, {y: 2}]`.
+To have it parsed as a single map, enclose them in `{}`.
 */
 
 a:1,
 b:[1 2],
-do: [             // Use "(" to enforce array structure
+do: [
   move 1 2;       // No "," needed between non-keyvalue arguments
   move [1 2];
   move 1 2, 3 -4; // For readability, commas can be inserted between arguments.
   move [1,2] [3,-4]; // To pass list of lists
   move [1 2] [3 -4]; // Same
-  move (1,2) (3,-4); // Same, if you prefer "()"s for coordinates
-  move (1 2) (3 -4); // Same
-  turn { x:1},{y:2 }; // Two key-values map
   turn { x:1, y:2 };  // One key-values map
-  turn x:1, y:2;      // One key-values map
+  turn { x:1},{y:2 }; // Two key-values map
+  turn x:1, y:2;      // Two key-values map
+  turn x:1  y:2;      // Two key-values map
   turn left 1 right 2;
-//  move [[1 2]];
 ]
 //
  //

@@ -13,7 +13,7 @@ mationGrammar {
     | KeyValuesMap
     | identifier
     | literal
-    | List  // []
+    | List
     | Command // Command's result can be a value
     
   Values = (Value ","?)*
@@ -21,8 +21,9 @@ mationGrammar {
   // Identifiers = (identifier ","?)* // Need syntactic rule (Caps), lexical rule fails parsing "(1, 2)" 
   // Literals = (literal ","?)*       // Same
   
-  List = "[" Values "]"
-       | "[" Commands "]"
+  List // "Array" in doc
+    = "[" Values "]"
+    | "[" Commands "]"
   Command = identifier Values
 
   markdown = mdStart mdText mdEnd
