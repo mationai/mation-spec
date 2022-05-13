@@ -21,7 +21,7 @@ parse.literal = (literal={}) => {
     case 'stringLiteral':
       return sourceString.slice(1, -1)
   }
-  throw new Error(`Handler missing for literal of type: ${ctorName}`)
+  throw new Error(`Parser missing handler for literal of type: ${ctorName}`)
 }
 
 parse.List = (iter={}) => {
@@ -65,8 +65,10 @@ parse.Value = (node={}) => {
       return parse.KeyValue(node.child(0), node.child(2))
     case 'Map':
       return parse.Map(node)
+    case 'EmptyMap':
+      return {}
   }
-  throw new Error(`Handler missing for Value of type: ${node.ctorName}`)
+  throw new Error(`Parser missing handler for Value of type: ${node.ctorName}`)
 }
 
 parse.Command = (Command={}) => {

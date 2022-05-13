@@ -25,7 +25,8 @@ For certain applications, documentation may be of much greater importance than c
 ## Usage
 
 ```cs
-yarn add mation-spec@https://github.com/fuzzthink/mation-spec/tarball/v0.1.4  // For now
+yarn add mation-spec@https://github.com/fuzzthink/mation-spec/tarball/<latest> // For now
+  //  where <latest> is eg. v0.1.5, see Releases for latest
 yarn add 'mation-spec' // When package is published
 ```
 

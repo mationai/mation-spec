@@ -33,7 +33,8 @@ mationGrammar {
   KeyValues = (KeyValue ","?)+ //> ","?  // Nonempty needed for + on parent
   KeyValue = Key ":" Value
   Map = "{" KeyValues "}"
-
+  EmptyMap = "{" "}" // can't be lexical rule
+  
   Key
     = identifier
     | stringLiteral
@@ -41,6 +42,7 @@ mationGrammar {
   Value
     = KeyValue
     | Map
+    | EmptyMap
     | identifier
     | literal
     | List
