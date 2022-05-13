@@ -1,14 +1,16 @@
 # Mation - Readable Configuration Specification Format for Automation and Task Runners
 
+(Grammar subject to change before v1.0)
+
 ## Highlight
 
-Mation is a simple, readable Structured Configuration Format designed to specify how to run automations and code generations. The main design goal is to be easy to read, write, and flexible. Its initial focus was to be a generic DSL for describing the model and transitions for animation generation. However, the goal has always been to be simple yet powerful and flexible engough to become the standard for its intended use case and well suited for common configuration needs.
+Mation is a simple, readable Structured Configuration Format designed to specify how to configure and call functions for automations and code generations. The best way to describe it is the human readable spec to your DSL, API and mapping interface logic. 
 
-### What It Is and Is Not
-
-Mation is easy to read and write DSL standard to generate JSON or other configuration formats, or for developers to write interfaces to consume it directly (having a formal grammar will definitely help in that). Thus, it is not an ideal choice for data exchange, or if you already have a system of generating the configuration files and making changes to that is not a good investment of your time.
+The goal is to be simple yet powerful and flexible engough to become the standard for its intended use case and well suited for common configuration needs.
 
 ### Documentation for Configuration
+
+Documentation is a core concept in Mation.
 
 For certain applications, documentation may be of much greater importance than code documentation. Yet comments inside a common configuration file such as JSON is illegal. Yes, you can hack it by adding a "_note" field to it, but this hurdle sets the percedence for developers to either not think about documentation or do so in other places where it is not readily accessible when viewing the configuration. Other configuration formats allows comments, but it is still not good enough. Documentation is not just text. Good documentation requires sectioning and styling the text to give it meaning and importance. Thus the ability to include Markdown sections is crucial. With it, you can have literal programming within configuration files.  
 
@@ -54,6 +56,11 @@ const result = parse(`
 
 See [/examples](./examples/) for more in depth examples.
 
+### Syntax Highlighting
+
+Syntax Highlighting is on the roadmap for major editors and readers.
+
+You can get a surprisingly good syntax highlighing if associate Mation with Rust even though the two languages are very different. To do so in VSCode, hold `Ctrl+Shift+P` (`Cmd+Shift+P` on Mac), select "Change Language Mode", select Rust.
 
 ### Development
 
@@ -179,24 +186,25 @@ JSON is the default standard when one thinks about configuration and data exchan
 
 ## Roadmap
 
-## High Priority
+### High Priority
 - [x] Strings and Numbers
-- [ ] Parser with Extensive Unit Tests
-- [ ] Syntax highlighter for VSCode
-- [ ] Usage Examples
-- [ ] Better Documentation
+- [.] Parser with Extensive Unit Tests
+- [.] Syntax highlighting for VSCode
+- [.] Usage Examples
+- [.] Good Documentation
 
-## Mid Priority
-- [ ] Meta variables
+### Mid Priority
 - [ ] String templates
-- [ ] Code block values
-- [ ] Syntax highlighter for browser editors 
-- [ ] Syntax highlighter for major editors 
-- [ ] Parser for other languages 
+- [ ] Syntax highlighting for major editors 
+- [ ] Parser for other languages besides JavaScript 
+
+### Possible Features
+- [ ] Meta variables
+- [ ] Code blocks as values
 
 ## Anti-Roadmap
 
-To keep Mation simple, it will not support:
+Features unlikely to be supported to keep Mation simple.
 - String line continuations - use string templates for multi-line strings 
 
 ## LICENSE
