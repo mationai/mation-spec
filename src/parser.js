@@ -1,6 +1,8 @@
-import ohm from 'ohm-js'
+// import ohm from 'ohm-js'
+import extras from 'ohm-js/extras'
 
-const toAST = ohm.extras.toAST
+const toAST = extras.toAST
+// const toAST = ohm.extras.toAST
 const parse = {}
 const parser = {}
 export default parser

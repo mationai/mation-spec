@@ -19,7 +19,6 @@ export const parse = (userText='', options={}) => {
   const grammarText = options.ohmGrammar ||
     fs.readFileSync(path.join(__dirname, 'mationGrammar.ohm'))
   const g = ohm.grammar(grammarText)
-
   const res = parser.parse(userText, g, options)
   return res
 }
