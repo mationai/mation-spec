@@ -1,6 +1,6 @@
 import ohm from 'ohm-js'
 import parser from './parser'
-import grammar from './mationGrammar.ohm?raw'
+import grammar from '/src/mationGrammar.ohm?raw'
 
 /**
  * @returns {

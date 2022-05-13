@@ -17,7 +17,7 @@
     "ohm-js": "^16.3.4"
   },
   "devDependencies": {
-    "vite": "^2.9.8",
+    "vite": "v2.9.9",
     "vitest": "^0.12.0"
   }
 }
