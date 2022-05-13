@@ -22,9 +22,13 @@ For certain applications, documentation may be of much greater importance than c
 
 ## Usage
 
+```cs
+yarn add mation-spec@https://github.com/fuzzthink/mation-spec/tarball/v0.1.2  // For now
+yarn add 'mation-spec' // When package is published
+```
+
 ```js
-import { parse } from './src/api'
-// import { parse } from 'mation-spec' // When package is published
+import { parse } from 'mation-spec'
 
 const result = parse(`
   a: 1,
