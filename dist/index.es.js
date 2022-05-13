@@ -4478,7 +4478,13 @@ parser.parse = (userText, g, options = {}) => {
     out.markdowns = markdowns;
   return out;
 };
-var grammar = `mationGrammar {
+const parse = (userText = "", options = {}) => {
+  const g = ohm.grammar(typeof options.grammarText === "string" ? options.grammarText : grammar);
+  const res = parser.parse(userText, g, options);
+  return res;
+};
+const grammar = String.raw`
+mationGrammar {
   Program = (markdown | KeyValues)*
   
   KeyValues = (KeyValue ","?)+ //> ","?  // Nonempty needed for + on parent
@@ -4517,7 +4523,7 @@ var grammar = `mationGrammar {
   
 /* It's a backtick, which is used to create a code block. */
   comment = "//" (~nl any)* (nl | end)
-  nl = "\\n" | "\\r\\n"
+  nl = "\n" | "\r\n"
   space += ws | nl | comment
 
   identifier = ~reservedWord identName
@@ -4528,9 +4534,9 @@ var grammar = `mationGrammar {
   otherIPart = "-" | "+"
   
   unicode = unicodeStart unicodePart*
-  unicodeStart = "\\\\" unicodeEscSeq
+  unicodeStart = "\\" unicodeEscSeq
   unicodeEscSeq = "u" hexDigit hexDigit hexDigit hexDigit
-  unicodePart = unicodeStart | unicodeCM | unicodeDigit | unicodeCP | "\\u200C" | "\\u200D"
+  unicodePart = unicodeStart | unicodeCM | unicodeDigit | unicodeCP | "\u200C" | "\u200D"
   
   literal = nullLiteral | booleanLiteral | numericLiteral | stringLiteral 
   nullLiteral = "null" ~identPart
@@ -4538,20 +4544,20 @@ var grammar = `mationGrammar {
   reservedWord = nullLiteral | booleanLiteral
 
   ws = " "
-    | "\\t"
-    | "\\x0B"    -- verticalTab
-    | "\\x0C"    -- formFeed
-    | "\\u00A0"  -- noBreakSpace
-    | "\\uFEFF"  -- byteOrderMark
+    | "\t"
+    | "\x0B"    -- verticalTab
+    | "\x0C"    -- formFeed
+    | "\u00A0"  -- noBreakSpace
+    | "\uFEFF"  -- byteOrderMark
     | unicodeSpace
 
-  stringLiteral = "\\"" nonDoubleQuoteChar* "\\""
+  stringLiteral = "\"" nonDoubleQuoteChar* "\""
                 | "'" nonSingleQuoteChar* "'"
 
-  nonDoubleQuoteChar = ~("\\"" | "\\\\" | nl) sourceChar -- nonEscaped
-                     | "\\\\" escapeSeqence             -- escaped
-  nonSingleQuoteChar = ~("'" | "\\\\" | nl ) sourceChar -- nonEscaped
-                     | "\\\\" escapeSeqence             -- escaped
+  nonDoubleQuoteChar = ~("\"" | "\\" | nl) sourceChar -- nonEscaped
+                     | "\\" escapeSeqence             -- escaped
+  nonSingleQuoteChar = ~("'" | "\\" | nl ) sourceChar -- nonEscaped
+                     | "\\" escapeSeqence             -- escaped
 
   escapeSeqence = unicodeEscSeq
             | hexEscSeq
@@ -4563,18 +4569,18 @@ var grammar = `mationGrammar {
               | zeroToThree octalDigit ~decimalDigit -- eightTimesZeroToThree
               | octalDigit ~decimalDigit             -- octalDigits
   hexEscSeq = "x" hexDigit hexDigit
-  singleEscapeChar = "'" | "\\"" | "\\\\" | "b" | "f" | "n" | "r" | "t" | "v"
+  singleEscapeChar = "'" | "\"" | "\\" | "b" | "f" | "n" | "r" | "t" | "v"
   nonEscapeChar = ~(escapeChar | nl) sourceChar
   escapeChar = singleEscapeChar | decimalDigit | "x" | "u"
 
   unicodeDigit (a digit)
-    = "\\u0030".."\\u0039" | "\\u0660".."\\u0669" | "\\u06F0".."\\u06F9" | "\\u0966".."\\u096F" | "\\u09E6".."\\u09EF" | "\\u0A66".."\\u0A6F" | "\\u0AE6".."\\u0AEF" | "\\u0B66".."\\u0B6F" | "\\u0BE7".."\\u0BEF" | "\\u0C66".."\\u0C6F" | "\\u0CE6".."\\u0CEF" | "\\u0D66".."\\u0D6F" | "\\u0E50".."\\u0E59" | "\\u0ED0".."\\u0ED9" | "\\u0F20".."\\u0F29" | "\\uFF10".."\\uFF19"
+    = "\u0030".."\u0039" | "\u0660".."\u0669" | "\u06F0".."\u06F9" | "\u0966".."\u096F" | "\u09E6".."\u09EF" | "\u0A66".."\u0A6F" | "\u0AE6".."\u0AEF" | "\u0B66".."\u0B6F" | "\u0BE7".."\u0BEF" | "\u0C66".."\u0C6F" | "\u0CE6".."\u0CEF" | "\u0D66".."\u0D6F" | "\u0E50".."\u0E59" | "\u0ED0".."\u0ED9" | "\u0F20".."\u0F29" | "\uFF10".."\uFF19"
 
   unicodeCM (Unicode combining mark)
-    = "\\u0300".."\\u0345" | "\\u0360".."\\u0361" | "\\u0483".."\\u0486" | "\\u0591".."\\u05A1" | "\\u05A3".."\\u05B9" | "\\u05BB".."\\u05BD" | "\\u05BF".."\\u05BF" | "\\u05C1".."\\u05C2" | "\\u05C4".."\\u05C4" | "\\u064B".."\\u0652" | "\\u0670".."\\u0670" | "\\u06D6".."\\u06DC" | "\\u06DF".."\\u06E4" | "\\u06E7".."\\u06E8" | "\\u06EA".."\\u06ED" | "\\u0901".."\\u0902" | "\\u093C".."\\u093C" | "\\u0941".."\\u0948" | "\\u094D".."\\u094D" | "\\u0951".."\\u0954" | "\\u0962".."\\u0963" | "\\u0981".."\\u0981" | "\\u09BC".."\\u09BC" | "\\u09C1".."\\u09C4" | "\\u09CD".."\\u09CD" | "\\u09E2".."\\u09E3" | "\\u0A02".."\\u0A02" | "\\u0A3C".."\\u0A3C" | "\\u0A41".."\\u0A42" | "\\u0A47".."\\u0A48" | "\\u0A4B".."\\u0A4D" | "\\u0A70".."\\u0A71" | "\\u0A81".."\\u0A82" | "\\u0ABC".."\\u0ABC" | "\\u0AC1".."\\u0AC5" | "\\u0AC7".."\\u0AC8" | "\\u0ACD".."\\u0ACD" | "\\u0B01".."\\u0B01" | "\\u0B3C".."\\u0B3C" | "\\u0B3F".."\\u0B3F" | "\\u0B41".."\\u0B43" | "\\u0B4D".."\\u0B4D" | "\\u0B56".."\\u0B56" | "\\u0B82".."\\u0B82" | "\\u0BC0".."\\u0BC0" | "\\u0BCD".."\\u0BCD" | "\\u0C3E".."\\u0C40" | "\\u0C46".."\\u0C48" | "\\u0C4A".."\\u0C4D" | "\\u0C55".."\\u0C56" | "\\u0CBF".."\\u0CBF" | "\\u0CC6".."\\u0CC6" | "\\u0CCC".."\\u0CCD" | "\\u0D41".."\\u0D43" | "\\u0D4D".."\\u0D4D" | "\\u0E31".."\\u0E31" | "\\u0E34".."\\u0E3A" | "\\u0E47".."\\u0E4E" | "\\u0EB1".."\\u0EB1" | "\\u0EB4".."\\u0EB9" | "\\u0EBB".."\\u0EBC" | "\\u0EC8".."\\u0ECD" | "\\u0F18".."\\u0F19" | "\\u0F35".."\\u0F35" | "\\u0F37".."\\u0F37" | "\\u0F39".."\\u0F39" | "\\u0F71".."\\u0F7E" | "\\u0F80".."\\u0F84" | "\\u0F86".."\\u0F87" | "\\u0F90".."\\u0F95" | "\\u0F97".."\\u0F97" | "\\u0F99".."\\u0FAD" | "\\u0FB1".."\\u0FB7" | "\\u0FB9".."\\u0FB9" | "\\u20D0".."\\u20DC" | "\\u20E1".."\\u20E1" | "\\u302A".."\\u302F" | "\\u3099".."\\u309A" | "\\uFB1E".."\\uFB1E" | "\\uFE20".."\\uFE23"
+    = "\u0300".."\u0345" | "\u0360".."\u0361" | "\u0483".."\u0486" | "\u0591".."\u05A1" | "\u05A3".."\u05B9" | "\u05BB".."\u05BD" | "\u05BF".."\u05BF" | "\u05C1".."\u05C2" | "\u05C4".."\u05C4" | "\u064B".."\u0652" | "\u0670".."\u0670" | "\u06D6".."\u06DC" | "\u06DF".."\u06E4" | "\u06E7".."\u06E8" | "\u06EA".."\u06ED" | "\u0901".."\u0902" | "\u093C".."\u093C" | "\u0941".."\u0948" | "\u094D".."\u094D" | "\u0951".."\u0954" | "\u0962".."\u0963" | "\u0981".."\u0981" | "\u09BC".."\u09BC" | "\u09C1".."\u09C4" | "\u09CD".."\u09CD" | "\u09E2".."\u09E3" | "\u0A02".."\u0A02" | "\u0A3C".."\u0A3C" | "\u0A41".."\u0A42" | "\u0A47".."\u0A48" | "\u0A4B".."\u0A4D" | "\u0A70".."\u0A71" | "\u0A81".."\u0A82" | "\u0ABC".."\u0ABC" | "\u0AC1".."\u0AC5" | "\u0AC7".."\u0AC8" | "\u0ACD".."\u0ACD" | "\u0B01".."\u0B01" | "\u0B3C".."\u0B3C" | "\u0B3F".."\u0B3F" | "\u0B41".."\u0B43" | "\u0B4D".."\u0B4D" | "\u0B56".."\u0B56" | "\u0B82".."\u0B82" | "\u0BC0".."\u0BC0" | "\u0BCD".."\u0BCD" | "\u0C3E".."\u0C40" | "\u0C46".."\u0C48" | "\u0C4A".."\u0C4D" | "\u0C55".."\u0C56" | "\u0CBF".."\u0CBF" | "\u0CC6".."\u0CC6" | "\u0CCC".."\u0CCD" | "\u0D41".."\u0D43" | "\u0D4D".."\u0D4D" | "\u0E31".."\u0E31" | "\u0E34".."\u0E3A" | "\u0E47".."\u0E4E" | "\u0EB1".."\u0EB1" | "\u0EB4".."\u0EB9" | "\u0EBB".."\u0EBC" | "\u0EC8".."\u0ECD" | "\u0F18".."\u0F19" | "\u0F35".."\u0F35" | "\u0F37".."\u0F37" | "\u0F39".."\u0F39" | "\u0F71".."\u0F7E" | "\u0F80".."\u0F84" | "\u0F86".."\u0F87" | "\u0F90".."\u0F95" | "\u0F97".."\u0F97" | "\u0F99".."\u0FAD" | "\u0FB1".."\u0FB7" | "\u0FB9".."\u0FB9" | "\u20D0".."\u20DC" | "\u20E1".."\u20E1" | "\u302A".."\u302F" | "\u3099".."\u309A" | "\uFB1E".."\uFB1E" | "\uFE20".."\uFE23"
 
-  unicodeCP (Unicode Connector Punctuation) = "\\u005F" | "\\u203F".."\\u2040" | "\\u30FB" | "\\uFE33".."\\uFE34" | "\\uFE4D".."\\uFE4F" | "\\uFF3F" | "\\uFF65"
-  unicodeSpace = "\\u2000".."\\u200B" | "\\u3000"
+  unicodeCP (Unicode Connector Punctuation) = "\u005F" | "\u203F".."\u2040" | "\u30FB" | "\uFE33".."\uFE34" | "\uFE4D".."\uFE4F" | "\uFF3F" | "\uFF65"
+  unicodeSpace = "\u2000".."\u200B" | "\u3000"
 
   octalDigit = "0".."7"
   decimalDigit = "0".."9"
@@ -4604,9 +4610,4 @@ var grammar = `mationGrammar {
 
   sourceChar = any
 }`;
-const parse = (userText = "", options = {}) => {
-  const g = ohm.grammar(typeof options.grammarText === "string" ? options.grammarText : grammar);
-  const res = parser.parse(userText, g, options);
-  return res;
-};
 export { parse };
