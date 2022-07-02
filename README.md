@@ -31,9 +31,9 @@ yarn add 'mation-spec' // When package is published
 ```
 
 ```js
-import { parse } from 'mation-spec'
+import parser from 'mation-spec'
 
-const result = parse(`
+const result = parser.parse(`
   a: 1,
   b: 2,    
   /** md **
@@ -72,6 +72,8 @@ yarn run dev // To watch & build
 yarn run build // To build dist
 yarn add pkg-name // -D for dev only dep
 ```
+
+Grammar is developed with [Ohm](https://ohmjs.org/). Ohm provides an [online editor](https://ohmjs.org/editor/) where you can play around with the syntax.
 
 ### Tests
 

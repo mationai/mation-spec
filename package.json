@@ -1,9 +1,16 @@
 {
   "name": "mation-spec",
-  "version": "0.1.0",
+  "version": "0.1.6",
   "description": "Readable Configuration Specification Format for Automation and Task Runners",
-  "main": "src/api.js",
   "packageManager": "yarn@3.2.0",
+  "main": "./dist/index.umd.js",
+  "module": "./dist/index.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.js"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -17,7 +24,7 @@
     "ohm-js": "^16.3.4"
   },
   "devDependencies": {
-    "vite": "v2.9.9",
+    "vite": "2.9.13",
     "vitest": "^0.12.0"
   }
 }
