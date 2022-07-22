@@ -18,6 +18,12 @@ test(`Nested - Mostly emtpy structures, with good mix of comma/no-comma`, () => 
     tweenDuration: {
     }
     steps: [
+      move a;
+      do [
+        fold points:[3] 90 over-edges:[16];
+        unfold points:[0] 90 over-edges:[18];
+      ];
+      move c;
     ]
   `).result)
   .toStrictEqual({
@@ -30,6 +36,13 @@ test(`Nested - Mostly emtpy structures, with good mix of comma/no-comma`, () => 
       },
     },
     tweenDuration: {},
-    steps: [],
+    steps: [
+      ['move', 'a'],
+      ['do', [
+        ['fold', {points:[3]}, 90, {'over-edges':[16]}],
+        ['unfold', {points:[0]}, 90, {'over-edges':[18]}],
+      ]],
+      ['move', 'c', ],
+    ]
   })
 })

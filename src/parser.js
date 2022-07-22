@@ -65,6 +65,8 @@ parse.Value = (node={}) => {
       return parse.KeyValue(node.child(0), node.child(2))
     case 'Map':
       return parse.Map(node)
+    case 'Command':
+      return parse.Command(node)
     case 'EmptyMap':
       return {}
   }

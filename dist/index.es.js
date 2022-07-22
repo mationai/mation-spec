@@ -4419,6 +4419,8 @@ parse$1.Value = (node = {}) => {
       return parse$1.KeyValue(node.child(0), node.child(2));
     case "Map":
       return parse$1.Map(node);
+    case "Command":
+      return parse$1.Command(node);
     case "EmptyMap":
       return {};
   }
