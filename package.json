@@ -1,6 +1,6 @@
 {
   "name": "mation-spec",
-  "version": "0.1.7",
+  "version": "0.2.0",
   "description": "Readable Configuration Specification Format for Automation and Task Runners",
   "packageManager": "yarn@3.2.0",
   "main": "./dist/index.umd.js",

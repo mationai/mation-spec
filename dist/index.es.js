@@ -4523,8 +4523,9 @@ var grammar = `mationGrammar {
   
 /* It's a backtick, which is used to create a code block. */
   comment = "//" (~nl any)* (nl | end)
+  blockComment = "/*" (~"*/" any)* "*/"
   nl = "\\n" | "\\r\\n"
-  space += ws | nl | comment
+  space += ws | nl | comment | blockComment
 
   identifier = ~reservedWord identName
   identName = identStart identPart*
