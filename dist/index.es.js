@@ -4372,15 +4372,29 @@ const parser = {};
 const innerChilds = (node = {}) => {
   return node.child(1).child(0).children;
 };
-parse$1.literal = (literal = {}) => {
-  const { ctorName, sourceString } = literal.child(0);
+const round = (n, decimals = 14) => {
+  if (n == null)
+    return n;
+  const k = Math.pow(10, decimals);
+  const res = Math.round(n * k) / k;
+  return res === 0 ? 0 : res;
+};
+parse$1.numericLiteral = (sourceString) => {
+  if (sourceString.endsWith("%")) {
+    const n = Number(sourceString.replace("%", ""));
+    return round(n * 0.01);
+  }
+  return Number(sourceString);
+};
+parse$1.literal = (node = {}) => {
+  const { ctorName, sourceString } = node.child(0);
   switch (ctorName) {
     case "nullLiteral":
       return null;
     case "booleanLiteral":
       return sourceString === "true";
     case "numericLiteral":
-      return Number(sourceString);
+      return parse$1.numericLiteral(sourceString);
     case "stringLiteral":
       return sourceString.slice(1, -1);
   }
@@ -4598,7 +4612,7 @@ var grammar = `mationGrammar {
   // Note that the ordering of hexNum and decimalNum is reversed w.r.t. the spec
   // This is intentional: the order decimalNum | hexNum will parse
   // "0x..." as a decimal literal "0" followed by "x..."
-  numericLiteral = "-"? (octalNum | hexNum | decimalNum)
+  numericLiteral = "-"? (percentNum | octalNum | hexNum | decimalNum)
   decimalNum = integer "." decimalDigit* exponentPart -- bothParts
              |         "." decimalDigit+ exponentPart -- decimalsOnly
              | integer                   exponentPart -- integerOnly
@@ -4606,6 +4620,7 @@ var grammar = `mationGrammar {
           | "0"                         -- zero
   hexNum = "0x" hexDigit+
          | "0X" hexDigit+
+  percentNum = decimalNum "%"
   // hexDigit defined in Ohm's built-in rules (otherwise: hexDigit = "0".."9" | "a".."f" | "A".."F")
   octalNum = "0" octalDigit+
 

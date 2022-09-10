@@ -114,7 +114,7 @@ mationGrammar {
   // Note that the ordering of hexNum and decimalNum is reversed w.r.t. the spec
   // This is intentional: the order decimalNum | hexNum will parse
   // "0x..." as a decimal literal "0" followed by "x..."
-  numericLiteral = "-"? (octalNum | hexNum | decimalNum)
+  numericLiteral = "-"? (percentNum | octalNum | hexNum | decimalNum)
   decimalNum = integer "." decimalDigit* exponentPart -- bothParts
              |         "." decimalDigit+ exponentPart -- decimalsOnly
              | integer                   exponentPart -- integerOnly
@@ -122,6 +122,7 @@ mationGrammar {
           | "0"                         -- zero
   hexNum = "0x" hexDigit+
          | "0X" hexDigit+
+  percentNum = decimalNum "%"
   // hexDigit defined in Ohm's built-in rules (otherwise: hexDigit = "0".."9" | "a".."f" | "A".."F")
   octalNum = "0" octalDigit+
 

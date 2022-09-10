@@ -9,15 +9,31 @@ const innerChilds = (node={}) => {
   return node.child(1).child(0).children // child(1) left-terminal, eg. [, {, <, (
 }
 
-parse.literal = (literal={}) => {
-  const { ctorName, sourceString } = literal.child(0)
+export const round = (n, decimals=14) => {
+  if (n == null)
+    return n
+  const k = Math.pow(10, decimals)
+  const res = Math.round(n * k) / k
+  return res === 0 ? 0 : res // no -0
+}
+
+parse.numericLiteral = (sourceString) => {
+  if (sourceString.endsWith('%')) {
+    const n = Number(sourceString.replace('%', ''))
+    return round(n * .01)
+  }
+  return Number(sourceString)
+}
+
+parse.literal = (node={}) => {
+  const { ctorName, sourceString } = node.child(0)
   switch (ctorName) {
     case 'nullLiteral':
       return null
     case 'booleanLiteral':
       return sourceString === 'true'
     case 'numericLiteral':
-      return Number(sourceString)
+      return parse.numericLiteral(sourceString)
     case 'stringLiteral':
       return sourceString.slice(1, -1)
   }
