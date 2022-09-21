@@ -4384,6 +4384,10 @@ parse$1.numericLiteral = (sourceString) => {
     const n = Number(sourceString.replace("%", ""));
     return round(n * 0.01);
   }
+  if (sourceString.includes("/")) {
+    const [numer, denom] = sourceString.split("/");
+    return numer / denom;
+  }
   return Number(sourceString);
 };
 parse$1.literal = (node = {}) => {
@@ -4608,11 +4612,12 @@ var grammar = `mationGrammar {
   signedInteger = "+" decimalDigit* -- positive
                 | "-" decimalDigit* -- negative
                 |     decimalDigit+ -- noSign
+  naturalNum = nonZeroDigit decimalDigit*
 
   // Note that the ordering of hexNum and decimalNum is reversed w.r.t. the spec
   // This is intentional: the order decimalNum | hexNum will parse
   // "0x..." as a decimal literal "0" followed by "x..."
-  numericLiteral = "-"? (percentNum | octalNum | hexNum | decimalNum)
+  numericLiteral = "-"? (fraction | percentNum | octalNum | hexNum | decimalNum)
   decimalNum = integer "." decimalDigit* exponentPart -- bothParts
              |         "." decimalDigit+ exponentPart -- decimalsOnly
              | integer                   exponentPart -- integerOnly
@@ -4621,6 +4626,7 @@ var grammar = `mationGrammar {
   hexNum = "0x" hexDigit+
          | "0X" hexDigit+
   percentNum = decimalNum "%"
+  fraction = naturalNum "/" naturalNum
   // hexDigit defined in Ohm's built-in rules (otherwise: hexDigit = "0".."9" | "a".."f" | "A".."F")
   octalNum = "0" octalDigit+
 

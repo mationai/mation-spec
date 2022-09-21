@@ -74,9 +74,11 @@ test.only(`Commands - Mixed strings and values args`, () => {
   expect(parse(`do: [
     turn left -1.23 right 2;
     move [1] 12.3% [2] -.5% beyond:[1 2];
+    move [1] 1/3 forward 11/111 back;
   ]`).result)
   .toStrictEqual({ do: [
     ['turn', 'left', -1.23, 'right', 2],
     ['move', [1], .123, [2], -.005, { beyond: [1, 2] }],
+    ['move', [1], 0.3333333333333333, 'forward', 0.0990990990990991, 'back'],
   ]})
 })

@@ -22,6 +22,10 @@ parse.numericLiteral = (sourceString) => {
     const n = Number(sourceString.replace('%', ''))
     return round(n * .01)
   }
+  if (sourceString.includes('/')) {
+    const [numer, denom] = sourceString.split('/')
+    return numer / denom
+  }
   return Number(sourceString)
 }
 
