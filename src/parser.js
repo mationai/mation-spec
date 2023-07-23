@@ -9,6 +9,14 @@ const innerChilds = (node={}) => {
   return node.child(1).child(0).children // child(1) left-terminal, eg. [, {, <, (
 }
 
+const parseFraction = (s='') => {
+  const strs = s.split('/')
+  const denom = strs.length > 1 ? Number(strs[1]) : 0
+  return !denom 
+    ? 1
+    : Number(strs[0]) / denom
+}
+
 export const round = (n, decimals=14) => {
   if (n == null)
     return n
@@ -23,8 +31,7 @@ parse.numericLiteral = (sourceString) => {
     return round(n * .01)
   }
   if (sourceString.includes('/')) {
-    const [numer, denom] = sourceString.split('/')
-    return numer / denom
+    return parseFraction(sourceString)
   }
   return Number(sourceString)
 }

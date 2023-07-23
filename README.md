@@ -65,9 +65,8 @@ You can get a surprisingly good syntax highlighing if associate Mation with Rust
 
 ### Development
 
-This project uses [yarn berry PnP](https://yarnpkg.com/features/pnp) as the package manager. It features Zero-Install, which means instead of requiring developers to install and build `node_modules`, a much smaller version of it is checked into the repo (`.pnp.*` `.yarnrc.yml`, `yarn.lock`, and `.yarn`. TLDR - No install needed, you're good to go upon checking out the repo.
-
 ```cs
+yarn install // To setup project 
 yarn run dev // To watch & build
 yarn run build // To build dist
 yarn add pkg-name // -D for dev only dep
