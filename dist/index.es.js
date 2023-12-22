@@ -716,9 +716,9 @@ var W = {
     return (o) => "" + o + s++;
   })();
 })(Q);
-const { abstract: Nt, isSyntactic: fu } = C, J = W, I = A, Lt = Q;
+const { abstract: Nt, isSyntactic: fu } = C, J = W, I = A, Ot = Q;
 let ru;
-Lt.awaitBuiltInRules((u) => {
+Ot.awaitBuiltInRules((u) => {
   ru = u;
 });
 let cu;
@@ -770,8 +770,8 @@ I.Apply.prototype._assertAllApplicationsAreValid = function(u, e, t = !1) {
       throw J.invalidParameter(this.ruleName, D);
   });
 };
-const Ot = C, pe = W, N = A;
-N.PExpr.prototype.assertChoicesHaveUniformArity = Ot.abstract(
+const Lt = C, pe = W, N = A;
+N.PExpr.prototype.assertChoicesHaveUniformArity = Lt.abstract(
   "assertChoicesHaveUniformArity"
 );
 N.any.assertChoicesHaveUniformArity = N.end.assertChoicesHaveUniformArity = N.Terminal.prototype.assertChoicesHaveUniformArity = N.Range.prototype.assertChoicesHaveUniformArity = N.Param.prototype.assertChoicesHaveUniformArity = N.Lex.prototype.assertChoicesHaveUniformArity = N.UnicodeChar.prototype.assertChoicesHaveUniformArity = function(u) {
@@ -807,28 +807,28 @@ N.Lookahead.prototype.assertChoicesHaveUniformArity = function(u) {
 };
 N.Apply.prototype.assertChoicesHaveUniformArity = function(u) {
 };
-const Pt = C, Rt = W, L = A;
-L.PExpr.prototype.assertIteratedExprsAreNotNullable = Pt.abstract(
+const Pt = C, Rt = W, O = A;
+O.PExpr.prototype.assertIteratedExprsAreNotNullable = Pt.abstract(
   "assertIteratedExprsAreNotNullable"
 );
-L.any.assertIteratedExprsAreNotNullable = L.end.assertIteratedExprsAreNotNullable = L.Terminal.prototype.assertIteratedExprsAreNotNullable = L.Range.prototype.assertIteratedExprsAreNotNullable = L.Param.prototype.assertIteratedExprsAreNotNullable = L.UnicodeChar.prototype.assertIteratedExprsAreNotNullable = function(u) {
+O.any.assertIteratedExprsAreNotNullable = O.end.assertIteratedExprsAreNotNullable = O.Terminal.prototype.assertIteratedExprsAreNotNullable = O.Range.prototype.assertIteratedExprsAreNotNullable = O.Param.prototype.assertIteratedExprsAreNotNullable = O.UnicodeChar.prototype.assertIteratedExprsAreNotNullable = function(u) {
 };
-L.Alt.prototype.assertIteratedExprsAreNotNullable = function(u) {
+O.Alt.prototype.assertIteratedExprsAreNotNullable = function(u) {
   for (let e = 0; e < this.terms.length; e++)
     this.terms[e].assertIteratedExprsAreNotNullable(u);
 };
-L.Seq.prototype.assertIteratedExprsAreNotNullable = function(u) {
+O.Seq.prototype.assertIteratedExprsAreNotNullable = function(u) {
   for (let e = 0; e < this.factors.length; e++)
     this.factors[e].assertIteratedExprsAreNotNullable(u);
 };
-L.Iter.prototype.assertIteratedExprsAreNotNullable = function(u) {
+O.Iter.prototype.assertIteratedExprsAreNotNullable = function(u) {
   if (this.expr.assertIteratedExprsAreNotNullable(u), this.expr.isNullable(u))
     throw Rt.kleeneExprHasNullableOperand(this, []);
 };
-L.Opt.prototype.assertIteratedExprsAreNotNullable = L.Not.prototype.assertIteratedExprsAreNotNullable = L.Lookahead.prototype.assertIteratedExprsAreNotNullable = L.Lex.prototype.assertIteratedExprsAreNotNullable = function(u) {
+O.Opt.prototype.assertIteratedExprsAreNotNullable = O.Not.prototype.assertIteratedExprsAreNotNullable = O.Lookahead.prototype.assertIteratedExprsAreNotNullable = O.Lex.prototype.assertIteratedExprsAreNotNullable = function(u) {
   this.expr.assertIteratedExprsAreNotNullable(u);
 };
-L.Apply.prototype.assertIteratedExprsAreNotNullable = function(u) {
+O.Apply.prototype.assertIteratedExprsAreNotNullable = function(u) {
   this.args.forEach((e) => {
     e.assertIteratedExprsAreNotNullable(u);
   });
@@ -914,7 +914,7 @@ Object.defineProperties(_.prototype, {
   }
 });
 var Nu = _;
-const kt = Nu, Lu = C, $t = "✗", jt = "✓", Mt = "⋅", qt = "⇒", Gt = "␉", Ut = "␊", Vt = "␍", vu = {
+const kt = Nu, Ou = C, $t = "✗", jt = "✓", Mt = "⋅", qt = "⇒", Gt = "␉", Ut = "␊", Vt = "␍", vu = {
   succeeded: 1,
   isRootNode: 2,
   isImplicitSpaces: 4,
@@ -923,11 +923,11 @@ const kt = Nu, Lu = C, $t = "✗", jt = "✓", Mt = "⋅", qt = "⇒", Gt = "␉
   terminatesLR: 32
 };
 function Kt(u) {
-  return Lu.repeat(" ", u).join("");
+  return Ou.repeat(" ", u).join("");
 }
 function zt(u, e, t) {
   const r = De(u.slice(e, e + t));
-  return r.length < t ? r + Lu.repeat(" ", t - r.length).join("") : r;
+  return r.length < t ? r + Ou.repeat(" ", t - r.length).join("") : r;
 }
 function De(u) {
   return typeof u == "string" ? u.replace(/ /g, Mt).replace(/\t/g, Gt).replace(/\n/g, Ut).replace(/\r/g, Vt) : String(u);
@@ -992,7 +992,7 @@ V.prototype.walk = function(u, e) {
   }) : r(this, null, 0);
 };
 V.prototype.toString = function() {
-  const u = new Lu.StringBuffer();
+  const u = new Ou.StringBuffer();
   return this.walk((e, t, r) => {
     if (!e)
       return this.SKIP;
@@ -1007,7 +1007,7 @@ V.prototype.toString = function() {
   }), u.contents();
 };
 var he = V;
-const Ht = he, Ae = C, Wt = W, Ou = wu, y = A, { TerminalNode: ou } = Ou, { NonterminalNode: Jt } = Ou, { IterationNode: Zt } = Ou;
+const Ht = he, Ae = C, Wt = W, Lu = wu, y = A, { TerminalNode: ou } = Lu, { NonterminalNode: Jt } = Lu, { IterationNode: Zt } = Lu;
 y.PExpr.prototype.eval = Ae.abstract("eval");
 y.any.eval = function(u) {
   const { inputStream: e } = u, t = e.pos, r = e.next();
@@ -1257,30 +1257,30 @@ v.Apply.prototype.outputRecipe = function(u, e) {
 v.UnicodeChar.prototype.outputRecipe = function(u, e) {
   return ["unicodeChar", z(this, e), this.category];
 };
-const Xt = C, O = A;
-O.PExpr.prototype.introduceParams = Xt.abstract("introduceParams");
-O.any.introduceParams = O.end.introduceParams = O.Terminal.prototype.introduceParams = O.Range.prototype.introduceParams = O.Param.prototype.introduceParams = O.UnicodeChar.prototype.introduceParams = function(u) {
+const Xt = C, L = A;
+L.PExpr.prototype.introduceParams = Xt.abstract("introduceParams");
+L.any.introduceParams = L.end.introduceParams = L.Terminal.prototype.introduceParams = L.Range.prototype.introduceParams = L.Param.prototype.introduceParams = L.UnicodeChar.prototype.introduceParams = function(u) {
   return this;
 };
-O.Alt.prototype.introduceParams = function(u) {
+L.Alt.prototype.introduceParams = function(u) {
   return this.terms.forEach((e, t, r) => {
     r[t] = e.introduceParams(u);
   }), this;
 };
-O.Seq.prototype.introduceParams = function(u) {
+L.Seq.prototype.introduceParams = function(u) {
   return this.factors.forEach((e, t, r) => {
     r[t] = e.introduceParams(u);
   }), this;
 };
-O.Iter.prototype.introduceParams = O.Not.prototype.introduceParams = O.Lookahead.prototype.introduceParams = O.Lex.prototype.introduceParams = function(u) {
+L.Iter.prototype.introduceParams = L.Not.prototype.introduceParams = L.Lookahead.prototype.introduceParams = L.Lex.prototype.introduceParams = function(u) {
   return this.expr = this.expr.introduceParams(u), this;
 };
-O.Apply.prototype.introduceParams = function(u) {
+L.Apply.prototype.introduceParams = function(u) {
   const e = u.indexOf(this.ruleName);
   if (e >= 0) {
     if (this.args.length > 0)
       throw new Error("Parameterized rules cannot be passed as arguments to another rule.");
-    return new O.Param(e).withSource(this.source);
+    return new L.Param(e).withSource(this.source);
   } else
     return this.args.forEach((t, r, n) => {
       n[r] = t.introduceParams(u);
@@ -2512,7 +2512,7 @@ uu.ProtoBuiltInRules = new uu(
   }
 );
 var Eu = uu;
-const Su = Eu, Nr = Tu, Se = C, Z = W, Lr = tu;
+const Su = Eu, Nr = Tu, Se = C, Z = W, Or = tu;
 function G(u) {
   this.name = u;
 }
@@ -2606,11 +2606,11 @@ G.prototype.override = function(u, e, t, r, n) {
 G.prototype.extend = function(u, e, t, r, n) {
   if (!this.ensureSuperGrammar().rules[u])
     throw Z.cannotExtendUndeclaredRule(u, this.superGrammar.name, n);
-  const s = new Lr.Extend(this.superGrammar, u, t);
+  const s = new Or.Extend(this.superGrammar, u, t);
   return s.source = t.source, this.installOverriddenOrExtendedRule(u, e, s, n), this;
 };
-var Or = G;
-const Pr = Eu, ee = Or, F = tu;
+var Lr = G;
+const Pr = Eu, ee = Lr, F = tu;
 function be() {
 }
 be.prototype = {
@@ -3284,7 +3284,7 @@ var gn = pu.exports;
 function Bn(u) {
   return u && u.__esModule && Object.prototype.hasOwnProperty.call(u, "default") ? u.default : u;
 }
-var Le = {};
+var Oe = {};
 (function(u) {
   u.abstract = function(t) {
     const r = t || "";
@@ -3378,8 +3378,8 @@ var Le = {};
       return r;
     }
   };
-})(Le);
-const { assert: eu } = Le;
+})(Oe);
+const { assert: eu } = Oe;
 function yn(u, e, t) {
   return t(e[u]);
 }
@@ -3462,7 +3462,7 @@ Fu.prototype.addOperation = function(u, e) {
   }, this;
 };
 var Sn = Fu;
-const Oe = {
+const Le = {
   _terminal() {
     return this.sourceString;
   },
@@ -3502,7 +3502,7 @@ function bn(u, e) {
   if (typeof u.failed != "function" || u.failed())
     throw new Error("toAST() expects a succesful MatchResult as first parameter");
   e = Object.assign({}, e);
-  const t = Object.assign({}, Oe);
+  const t = Object.assign({}, Le);
   for (const i in e)
     typeof e[i] == "function" && (t[i] = e[i], delete e[i]);
   return u._cst.grammar.createSemantics().addOperation("toAST(mapping)", t)(u).toAST(e);
@@ -3510,7 +3510,7 @@ function bn(u, e) {
 function wn(u) {
   if (typeof u.createSemantics != "function")
     throw new Error("semanticsToAST() expects a Grammar as parameter");
-  return u.createSemantics().addOperation("toAST(mapping)", Oe);
+  return u.createSemantics().addOperation("toAST(mapping)", Le);
 }
 var oe = {
   helper: bn,
@@ -3520,10 +3520,18 @@ var oe = {
   semanticsForToAST: oe.semantics,
   toAST: oe.helper
 };
-const Nn = /* @__PURE__ */ Bn(_n), ae = Nn.toAST, f = {}, Pe = {}, Re = (u = {}) => u.child(1).child(0).children, Ln = (u = "") => {
-  const e = u.split("/"), t = e.length > 1 ? Number(e[1]) : 0;
-  return t ? Number(e[0]) / t : 1;
-}, On = (u, e = 14) => {
+const Nn = /* @__PURE__ */ Bn(_n), ae = Nn.toAST, f = {}, Pe = {}, Re = (u = {}) => u.child(1).child(0).children, On = (u = "") => {
+  const e = u.trim().replace(/%$/, "");
+  return Number(e) / 100;
+}, Ln = (u = "") => {
+  if (u.trim().endsWith("%"))
+    return On(u);
+  const e = u.trim().split("/");
+  if (e.length !== 2)
+    return NaN;
+  const t = Number(e[1]);
+  return t ? Number(e[0]) / t : Number.POSITIVE_INFINITY;
+}, Pn = (u, e = 14) => {
   if (u == null)
     return u;
   const t = Math.pow(10, e), r = Math.round(u * t) / t;
@@ -3532,7 +3540,7 @@ const Nn = /* @__PURE__ */ Bn(_n), ae = Nn.toAST, f = {}, Pe = {}, Re = (u = {})
 f.numericLiteral = (u) => {
   if (u.endsWith("%")) {
     const e = Number(u.replace("%", ""));
-    return On(e * 0.01);
+    return Pn(e * 0.01);
   }
   return u.includes("/") ? Ln(u) : Number(u);
 };
@@ -3602,7 +3610,7 @@ f.Command = (u = {}) => {
   }
   return r;
 };
-const Pn = {
+const Rn = {
   KeyValues: (u, e) => ({
     type: "Map",
     value: f.Map(u, !0)
@@ -3615,14 +3623,14 @@ const Pn = {
 Pe.parse = (u, e, t = {}) => {
   const r = e.match(u);
   r.succeeded() || console.error("Match failed: " + r.message);
-  const { outputAST: n, outputMD: i } = t, s = [], o = ae(r, Pn);
+  const { outputAST: n, outputMD: i } = t, s = [], o = ae(r, Rn);
   let p = {};
   for (let a of o)
     a.type === "Markdown" ? s.push(a.value) : p = { ...p, ...a.value };
   const D = { result: p };
   return n && (D.AST = ae(r)), i && (D.markdowns = s), D;
 };
-const Rn = `mationGrammar {
+const Tn = `mationGrammar {
   Program = (markdown | KeyValues)*
   
   KeyValues = (KeyValue ","?)+ //> ","?  // Nonempty needed for + on parent
@@ -3753,12 +3761,12 @@ const Rn = `mationGrammar {
   octalNum = "0" octalDigit+
 
   sourceChar = any
-}`, Tn = (u = "", e = {}) => {
+}`, kn = (u = "", e = {}) => {
   const t = gn.grammar(
-    typeof e.grammarText == "string" ? e.grammarText : Rn
+    typeof e.grammarText == "string" ? e.grammarText : Tn
   );
   return Pe.parse(u, t, e);
 };
 export {
-  Tn as parse
+  kn as parse
 };

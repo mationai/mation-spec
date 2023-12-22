@@ -9,12 +9,26 @@ const innerChilds = (node={}) => {
   return node.child(1).child(0).children // child(1) left-terminal, eg. [, {, <, (
 }
 
+/**
+* @Assume @param s ends with '%' or represents it w/o '%'
+*/
+const parsePercent = (s='') => {
+  const nStr = s.trim().replace(/%$/, '')
+  return Number(nStr) / 100
+}
+
 const parseFraction = (s='') => {
-  const strs = s.split('/')
-  const denom = strs.length > 1 ? Number(strs[1]) : 0
-  return !denom 
-    ? 1
-    : Number(strs[0]) / denom
+  if (s.trim().endsWith('%'))
+    return parsePercent(s)
+
+  const strs = s.trim().split('/')
+  if (strs.length !== 2)
+    return NaN
+
+  const denom = Number(strs[1])
+  return denom
+    ? Number(strs[0]) / denom
+    : Number.POSITIVE_INFINITY
 }
 
 export const round = (n, decimals=14) => {
