@@ -209,6 +209,9 @@ JSON is the default standard when one thinks about configuration and data exchan
 Features unlikely to be supported to keep Mation simple.
 - String line continuations - use string templates for multi-line strings 
 
+## Used By
+- [foldMation](https://foldmation.com) - for human readable origami folding instructions DSL to JSON translation.  
+
 ## LICENSE
 
 Apache 2.0
