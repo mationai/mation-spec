@@ -70,7 +70,7 @@ test(`Commands - Variations of Multiple keyvalues map args`, () => {
   ]})
 })
 
-test.only(`Commands - Mixed strings and values args`, () => {
+test(`Commands - Mixed strings and values args`, () => {
   expect(parse(`do: [
     turn left -1.23 right 2;
     move [1] 12.3% [2] -.5% beyond:[1 2];

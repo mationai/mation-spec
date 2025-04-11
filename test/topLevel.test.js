@@ -23,6 +23,18 @@ test(`Top level - KeyValues wtih identifier keys mixed with Markdowns`, () => {
   })
 })
 
+test(`Top level - strings`, () => {
+  expect(parse(`
+    quoted: ['img.jpg', "123456.jpg"]
+    // unquoted: [img\.jpg #123456] // with or w/o \. fails 'Expected "0".."9"'
+  `).result)
+    // unquoted: [img.jpg, '#123456'] // the '.' m
+  .toStrictEqual({
+    quoted: ['img.jpg', '123456.jpg'],
+    // unquoted: ['img.jpg', '#123456']
+  })
+})
+
 test(`Top level - Non-JS allowed starting character identifiers`, () => {
   expect(parse(`
     #key: #val,     // #

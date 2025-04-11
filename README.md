@@ -80,6 +80,7 @@ Grammar is developed with [Ohm](https://ohmjs.org/). Ohm provides an [online edi
 yarn test
 yarn test test/some-specific.test.js // test 1 file 
 ```
+Append `.only` to a test to run only that test. Remember to remove `.only` when done.
 
 ## Overview
 
